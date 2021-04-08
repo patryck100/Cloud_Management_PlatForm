@@ -54,17 +54,22 @@ public class Cloud_Managment_Platform_app {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JButton Loginbutton = new JButton("Login");
-		Loginbutton.setBackground(Color.LIGHT_GRAY);
-		Loginbutton.setForeground(Color.BLACK);
-		Loginbutton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		Loginbutton.addActionListener(new ActionListener() {
+		//----------------------------- Login button ----------------------------
+		JButton LoginButton = new JButton("Login");
+		LoginButton.setBackground(Color.LIGHT_GRAY);
+		LoginButton.setForeground(Color.BLACK);
+		LoginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); //when hover the "Login" button, it changes the cursor to a hand cursor
+		
+		//When clicked on the "Login" button...
+		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(Loginbutton, "Hello");
+			JOptionPane.showMessageDialog(LoginButton, "Hello");
 			}
 		});
-		Loginbutton.setBounds(123, 161, 97, 29);
-		frame.getContentPane().add(Loginbutton);
+		
+		
+		LoginButton.setBounds(123, 161, 97, 29);
+		frame.getContentPane().add(LoginButton);
 		
 		JLabel lblNewLabel = new JLabel("Login:");
 		lblNewLabel.setForeground(Color.WHITE);
@@ -81,18 +86,24 @@ public class Cloud_Managment_Platform_app {
 		lblPassword.setBounds(85, 116, 75, 16);
 		frame.getContentPane().add(lblPassword);
 		
-		JButton btnNewButton = new JButton("Clear");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		
+		
+		// -------------------------- Clear Button --------------------------
+		JButton ClearButton = new JButton("Clear");
+		//When clicked on "Clear" button, it set Login and password fields to null, in other words it clear the fields
+		ClearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { 
 				LoginText.setText(null);
 				passwordField.setText(null);
 			}
 		});
-		btnNewButton.setBackground(Color.LIGHT_GRAY);
-		btnNewButton.setForeground(Color.BLACK);
-		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton.setBounds(221, 161, 81, 29);
-		frame.getContentPane().add(btnNewButton);
+		
+		
+		ClearButton.setBackground(Color.LIGHT_GRAY);
+		ClearButton.setForeground(Color.BLACK);
+		ClearButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		ClearButton.setBounds(221, 161, 81, 29);
+		frame.getContentPane().add(ClearButton);
 		
 		passwordField = new JPasswordField();
 		passwordField.setBounds(172, 111, 130, 26);
