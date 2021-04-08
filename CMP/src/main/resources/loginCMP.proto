@@ -1,0 +1,41 @@
+syntax = "proto3"; //version of the protoBuffer
+
+
+option java_multiple_files = true; //makes multiples files instead of making all the stubs in an unique file
+option java_package = "loginCMP"; //name of the package where the stubs will be stored
+option java_outer_classname = "LoginServiceImpl"; //name of the class which will be extended in the server "extends UserServiceImplBase"
+
+
+package CMP;
+
+// The services goes here.
+service LoginService {
+  //unary(unique request and response)
+  rpc login (LoginRequest) returns (LoginResponse) {}
+  rpc logout(LogoutRequest) returns (LogoutResponse){}
+
+}
+
+// The request message containing the user's name and password.
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// The response message saying if the login is sucessfull or not, and response code will later be used to allow or not the user to 
+// have access to the other services within the CMP application
+message LoginResponse {
+  string responseMessage = 1;
+  int32 responseCode = 2;
+}
+
+// Request logout has the username confirmation as a parameter
+message LogoutRequest{
+  string username = 1;
+}
+
+//response if it was sucessfull 
+message LogoutResponse{
+  string responseMessage = 1;
+  int32 responseCode = 2;
+}
