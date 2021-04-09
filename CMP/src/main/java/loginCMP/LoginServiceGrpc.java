@@ -126,7 +126,7 @@ public final class LoginServiceGrpc {
 
     /**
      * <pre>
-     *unary(unique request and response) method will be implemented in the server
+     *unary(unique request and response)
      * </pre>
      */
     public void login(loginCMP.LoginRequest request,
@@ -184,7 +184,7 @@ public final class LoginServiceGrpc {
 
     /**
      * <pre>
-     *unary(unique request and response) method will be implemented in the server
+     *unary(unique request and response)
      * </pre>
      */
     public void login(loginCMP.LoginRequest request,
@@ -225,7 +225,7 @@ public final class LoginServiceGrpc {
 
     /**
      * <pre>
-     *unary(unique request and response) method will be implemented in the server
+     *unary(unique request and response)
      * </pre>
      */
     public loginCMP.LoginResponse login(loginCMP.LoginRequest request) {
@@ -264,7 +264,7 @@ public final class LoginServiceGrpc {
 
     /**
      * <pre>
-     *unary(unique request and response) method will be implemented in the server
+     *unary(unique request and response)
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<loginCMP.LoginResponse> login(
