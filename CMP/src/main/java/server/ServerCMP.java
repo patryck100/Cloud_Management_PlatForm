@@ -13,7 +13,6 @@ public class ServerCMP implements Runnable{
 		// TODO Auto-generated method stub
 		Thread t = new Thread(new ServerCMP()); //just a test using Thread to run the server from the client
 		 t.start();
-		
 	}
 	
 	private static final Logger logger = Logger.getLogger(ServerCMP.class.getName());
