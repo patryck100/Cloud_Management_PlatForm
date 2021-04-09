@@ -15,6 +15,11 @@ public final class LoginServiceImpl {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CMP_user_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_CMP_user_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_CMP_LoginRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -43,16 +48,17 @@ public final class LoginServiceImpl {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016loginCMP.proto\022\003CMP\"2\n\014LoginRequest\022\020\n" +
-      "\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\">\n\rLog" +
-      "inResponse\022\027\n\017responseMessage\030\001 \001(\t\022\024\n\014r" +
-      "esponseCode\030\002 \001(\005\"!\n\rLogoutRequest\022\020\n\010us" +
-      "ername\030\001 \001(\t\"?\n\016LogoutResponse\022\027\n\017respon" +
-      "seMessage\030\001 \001(\t\022\024\n\014responseCode\030\002 \001(\0052u\n" +
-      "\014LoginService\0220\n\005login\022\021.CMP.LoginReques" +
-      "t\032\022.CMP.LoginResponse\"\000\0223\n\006logout\022\022.CMP." +
-      "LogoutRequest\032\023.CMP.LogoutResponse\"\000B\036\n\010" +
-      "loginCMPB\020LoginServiceImplP\001b\006proto3"
+      "\n\016loginCMP.proto\022\003CMP\"*\n\004user\022\020\n\010userNam" +
+      "e\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"2\n\014LoginReques" +
+      "t\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\">\n" +
+      "\rLoginResponse\022\027\n\017responseMessage\030\001 \001(\t\022" +
+      "\024\n\014responseCode\030\002 \001(\005\"!\n\rLogoutRequest\022\020" +
+      "\n\010username\030\001 \001(\t\"?\n\016LogoutResponse\022\027\n\017re" +
+      "sponseMessage\030\001 \001(\t\022\024\n\014responseCode\030\002 \001(" +
+      "\0052u\n\014LoginService\0220\n\005login\022\021.CMP.LoginRe" +
+      "quest\032\022.CMP.LoginResponse\"\000\0223\n\006logout\022\022." +
+      "CMP.LogoutRequest\032\023.CMP.LogoutResponse\"\000" +
+      "B\036\n\010loginCMPB\020LoginServiceImplP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -66,26 +72,32 @@ public final class LoginServiceImpl {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_CMP_LoginRequest_descriptor =
+    internal_static_CMP_user_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_CMP_user_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CMP_user_descriptor,
+        new java.lang.String[] { "UserName", "Password", });
+    internal_static_CMP_LoginRequest_descriptor =
+      getDescriptor().getMessageTypes().get(1);
     internal_static_CMP_LoginRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CMP_LoginRequest_descriptor,
         new java.lang.String[] { "Username", "Password", });
     internal_static_CMP_LoginResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_CMP_LoginResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CMP_LoginResponse_descriptor,
         new java.lang.String[] { "ResponseMessage", "ResponseCode", });
     internal_static_CMP_LogoutRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_CMP_LogoutRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CMP_LogoutRequest_descriptor,
         new java.lang.String[] { "Username", });
     internal_static_CMP_LogoutResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_CMP_LogoutResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CMP_LogoutResponse_descriptor,

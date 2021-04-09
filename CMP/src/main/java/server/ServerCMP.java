@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.protobuf.services.ProtoReflectionService;
+import services_Implementation.LoginService;
 
 public class ServerCMP implements Runnable{
 
@@ -19,14 +20,16 @@ public class ServerCMP implements Runnable{
 
 	@Override
 	public void run() {
-		//creates an object of the class
-		ServerCMP CMP = new ServerCMP();
+		//creates an object of the services classes
+		LoginService loginService = new LoginService();
+		
 	   
 	    int port = 50051;
 	    //creates a channel with the port number above which will be accessed by the client
 	    Server server;
 		try {
 			server = ServerBuilder.forPort(port)// add new services here like .addService(name of the service)
+				.addService(loginService)
 			    .addService(ProtoReflectionService.newInstance()) //test for reflection
 			    .build()
 			    .start();
