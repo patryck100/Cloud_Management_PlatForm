@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "capacity_print";
+option java_outer_classname = "capacityImpl";
+
+package capacity;
+
+// Client will request a string representation from the cloud
+message printRequest{
+	bool print = 1;
+}
+
+// A string representation of whatever is stored in the cloud will be returned as a response (including current size)
+message printResponse{
+	string printing = 1;
+}
+
+//Those are the 3 sizes of storage availible to the client.
+//The size is set to Basic automatically if the client does not choose a different size.
+enum Storage{
+	BASIC = 0; //default size
+	SILVER = 1; //double the basic size
+	GOLD = 2; // double the Silver size
+}
+
+// Storage will be requested by the client, who wants to choose a new size among the 3 options. 
+message storageRequest{
+	Storage storage = 1;
+}
+
+//A string representation informing the new size will be returned as response.
+//Implementation in the current cloud will be responsible to change the size to the new option chosen by the client
+message storageResponse {
+	string new_storage = 1;
+}
+
+
+service capacityService{
+	//Server streaming API
+	rpc print(printRequest) returns (stream printResponse){};
+	
+	//Unary API
+	rpc storage(storageRequest) returns (storageResponse){};
+}
+
+
