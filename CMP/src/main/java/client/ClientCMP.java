@@ -31,6 +31,8 @@ public class ClientCMP {
 		login("Patryck", "test");
 		
 		System.out.println("Shutting down the channel");
+		logout("Patryck");
+		
 		channel.shutdown();
 		
 		t.stop(); //stops server so then if the client run again it wont give exceptions for server being running already
@@ -56,6 +58,20 @@ public class ClientCMP {
 		System.out.println(response.getResponseMessage());
 		
 	}
+	
+	
+	//Unary API, validates user name against a database into the server to attempt logout
+	public static void logout(String username) {
+		System.out.println("\nInside Logout in Client: ");
+
+		LogoutRequest logoutRequest = LogoutRequest.newBuilder().setUsername(username).build();
+
+		LogoutResponse response = LoginClient.logout(logoutRequest);
+			
+		int responseCode = response.getResponseCode();
+
+		System.out.println("Response from Server: " + response.getResponseMessage());
+		}
 	
 	
 	

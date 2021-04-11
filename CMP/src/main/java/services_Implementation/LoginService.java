@@ -35,7 +35,7 @@ public class LoginService extends LoginServiceImplBase{
 	}
 	
 	
-
+	//Unary service API. Validates user name and password and later returns permission to access other files
 	@Override
 	public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
 		validateUser(); //write username and password which will be used to validate into a txt file
@@ -53,7 +53,7 @@ public class LoginService extends LoginServiceImplBase{
 		
 		/* starts variable "response", and depending on the result it returns a message positive or negative */
 		LoginResponse.Builder response = LoginResponse.newBuilder();
-		System.out.println("UserName given by user = " + UserName + ", password given by the user = " + Password);
+		System.out.println("UserName given by user = " + UserName + "\npassword given by the user = " + Password);
 		
 		
 		
@@ -82,7 +82,7 @@ public class LoginService extends LoginServiceImplBase{
 	}
 
 	
-	
+	//Unary service API. Validates user name and returns code to 0 if logout is successful, and 1 when attempt fails and client keeps logged in
 	@Override
 	public void logout(LogoutRequest request, StreamObserver<LogoutResponse> responseObserver) {
 		//reads what comes from the protocol buffer txt file "userAccount.txt" that was written before
@@ -101,10 +101,10 @@ public class LoginService extends LoginServiceImplBase{
 		//In the GUI when the response code is set to "0" it closes the interface and return to the Login page
 		if (UserName.equals(messageFromFile.getUserName())) { //if "UserName" is equals to "Patryck"
 			//return success response
-			response.setResponseCode(1).setResponseMessage("See you later " + UserName);
+			response.setResponseCode(0).setResponseMessage("See you later " + UserName);
 		} else {
 			//return fail response
-			response.setResponseCode(0).setResponseMessage("Sorry bro, wrong UserName! You are still Logged in");
+			response.setResponseCode(1).setResponseMessage("Sorry bro, wrong UserName! You are still Logged in");
 		}
 		
 		responseObserver.onNext(response.build());
