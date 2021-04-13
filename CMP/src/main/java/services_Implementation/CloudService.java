@@ -26,7 +26,7 @@ public class CloudService extends CloudServiceImplBase{
 	
 	
 	
-	
+	//Client Streaming
 	@Override
 	public StreamObserver<AddRequest> add(StreamObserver<ResponseMessage> responseObserver) {
 		
@@ -103,6 +103,7 @@ public class CloudService extends CloudServiceImplBase{
 	
 	
 	
+	/* ------------- Data insertion Implementation -----------------*/
 	
 	//This will store each of the employees records into a list
 	private List <Employee> employees = new ArrayList<>();
