@@ -1,8 +1,16 @@
 package client;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import CloudManagment.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import loginCMP.*;
 import server.ServerCMP;
 
@@ -27,11 +35,14 @@ public class ClientCMP {
 					.build();
 
 		LoginClient = LoginServiceGrpc.newBlockingStub(channel);
+		CloudClient = CloudServiceGrpc.newStub(channel);
 		
-		login("Patryck", "test");
+//		login("Patryck", "test");
+//		
+//		System.out.println("Shutting down the channel");
+//		logout("Patryck");
 		
-		System.out.println("Shutting down the channel");
-		logout("Patryck");
+		InsertData();
 		
 		channel.shutdown();
 		
@@ -43,6 +54,7 @@ public class ClientCMP {
 	
 	/*------------------------ Blocking Stub and Async Stub are initialized here ----------------*/
 	private static LoginServiceGrpc.LoginServiceBlockingStub LoginClient;
+	private static CloudServiceGrpc.CloudServiceStub CloudClient;
 	
 	
 	
@@ -72,6 +84,91 @@ public class ClientCMP {
 
 		System.out.println("Response from Server: " + response.getResponseMessage());
 		}
+	
+	
+	public static void InsertData() {
+		CountDownLatch latch = new CountDownLatch(1);
+		
+		StreamObserver<AddRequest> requestObserver = CloudClient.add( new StreamObserver <ResponseMessage>(){
+
+			@Override
+			public void onNext(ResponseMessage value) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+				
+			}
+
+			@Override
+			public void onCompleted() {
+				// the server is done sending us data
+				// onCompleted will be called right after onNext();
+				System.out.println("Server has completed sending messages");
+				latch.countDown();
+			}
+
+			
+			
+		});
+		
+		List<AddRequest> requests = new ArrayList<>();
+		Scanner sc = new Scanner(System.in);
+		String dateOfBirth = "";
+		String firstName = "";
+		String lastName = "";
+		String gender = "";
+		String hireDate = "";
+		
+		//This will set each field individually by prompting to the client
+		for (int i = 0; i< 2; i++) {
+		System.out.println("Please enter date of birth of the Employee (yyyy-mm-dd): ");
+		dateOfBirth = sc.nextLine();
+		
+		System.out.println("Please enter First Name of the Employee (Only letters): ");
+		firstName = sc.nextLine();
+		
+		System.out.println("Please enter Last Name of the Employee (Only Letters): ");
+		lastName = sc.nextLine();
+		
+		System.out.println("Please enter Gender of the Employee ('M' or 'F'): ");
+		gender = sc.nextLine();
+		
+		System.out.println("Please enter Date of the Employee is being hired (yyyy-mm-dd): ");
+		hireDate = sc.nextLine();
+		
+		requests.add(AddRequest.newBuilder().setDateOfBirth(dateOfBirth)
+				.setFirstName(firstName)
+				.setLastName(lastName)
+				.setGender(gender)
+				.setHireDate(hireDate)
+				.build());
+		
+		}
+		
+		//This will send all requests one by one
+		for (int i = 0; i< requests.size(); i ++) {
+			requestObserver.onNext(requests.get(i));
+		}
+		
+		
+		requestObserver.onCompleted();
+		
+			
+		
+		
+		//This is used to wait for the server's response. Otherwise the channel closes and there is no time to get response
+		try {
+			latch.await(3L, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	
