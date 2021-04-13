@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "CloudManagment";
+option java_outer_classname = "CloudManagmentImpl";
+
+package CloudManagment;
+
+service CloudService{
+	
+	//Client Streaming API (Client willl be able to send many add request and receive a final result)
+	rpc add(stream AddRequest) returns (ResponseMessage){};
+	
+	//Bidirectional Streaming API
+	rpc remove(stream RemoveRequest) returns (stream ResponseMessage){};
+	
+	//There will be one more (Alter) which will be implemented later
+
+}
+
+message AddRequest{
+	int32 empNo = 1;
+	string dateOfBirth = 2;
+	string firstName = 3;
+	string lastName = 4;
+	string gender = 5;
+	string hireDate = 6;
+}
+
+
+message ResponseMessage {
+	string response = 1;
+}
+
+message RemoveRequest {
+	int32 empNo = 1;
+}
+
+
+

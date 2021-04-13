@@ -6,6 +6,13 @@
   <name>CloudManagmentPlatForm</name>
   
   <dependencies>
+  
+  		<dependency>
+      		<groupId>com.opencsv</groupId>
+      		<artifactId>opencsv</artifactId>
+      		<version>5.3</version>
+  		</dependency>
+  
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
