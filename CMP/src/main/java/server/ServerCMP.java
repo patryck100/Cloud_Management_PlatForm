@@ -25,12 +25,14 @@ public class ServerCMP implements Runnable{
 		//creates an object of the services classes
 		LoginService loginService = new LoginService();
 		CloudService cloudService = new CloudService();
+		CapacityService capacityService = new CapacityService();
 	   
 	    int port = 50051;
 	    //creates a channel with the port number above which will be accessed by the client
 	    Server server;
 		try {
 			server = ServerBuilder.forPort(port)// add new services here like .addService(name of the service)
+				.addService(capacityService)
 				.addService(cloudService)
 				.addService(loginService)
 			    .addService(ProtoReflectionService.newInstance()) //test for reflection

@@ -1,15 +1,14 @@
 package services_Implementation;
 
 import java.awt.HeadlessException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -26,12 +25,14 @@ public class CloudService extends CloudServiceImplBase{
 	
 	
 	
-	//Client Streaming
+	//Client Streaming API
 	@Override
 	public StreamObserver<AddRequest> add(StreamObserver<ResponseMessage> responseObserver) {
 		
 		StreamObserver<AddRequest> requestObserver = new StreamObserver<AddRequest>() {
-
+			
+			String nextID;
+			int size = size();
 			@Override
 			public void onNext(AddRequest value) {
 				if(value.getDateOfBirth().matches(regex) && isValid(value.getFirstName())) { //  BIRTHDAY VALIDATION
@@ -39,9 +40,11 @@ public class CloudService extends CloudServiceImplBase{
 							try {
 								if (over18(value.getDateOfBirth()) && aboveRetirement(value.getDateOfBirth())) {
 									//This will set automatically the next employee number according to the size of the list
-									int nextID = employees.size()+1; 
+									size++;
+									nextID = ""+(size);									 
 									employees.add(new Employee(nextID, value.getDateOfBirth(), value.getFirstName(), value.getLastName(), value.getGender(), value.getHireDate()));
-									JOptionPane.showMessageDialog(null, "Employee: " + employees.get(size()-1) + " added successfully");
+									JOptionPane.showMessageDialog(null, "Employee: " + employees.get(counter) + " added successfully");
+									counter++; //keeps track of the Employee record
 								} else
 									try {
 										if (!over18(value.getDateOfBirth())) {
@@ -77,9 +80,13 @@ public class CloudService extends CloudServiceImplBase{
 				//To represent a small local database, this function overwrites whatever is in the list into a CSV file database inside the project folder
 				try {
 					writeFile();
-					responseObserver.onNext(ResponseMessage.newBuilder()
-							.setResponse("The Employee record was updated! New size: " + employees.size())
-							.build());
+					
+					ResponseMessage message = ResponseMessage.newBuilder()
+							.setResponse("The Employee record was updated! New size: " + (size))
+							.build();
+
+					responseObserver.onNext(message);
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -105,8 +112,11 @@ public class CloudService extends CloudServiceImplBase{
 	
 	/* ------------- Data insertion Implementation -----------------*/
 	
-	//This will store each of the employees records into a list
+	//This will store each of the employees records into an Array list
 	private List <Employee> employees = new ArrayList<>();
+	private int counter = 0;
+	
+	
 	private static String formatOfDate = "yyyy-MM-dd"; //Format of the date must be the same as in the CSV file
 	private static DateFormat df = new SimpleDateFormat(formatOfDate); 
 		
@@ -135,12 +145,13 @@ public class CloudService extends CloudServiceImplBase{
 	    }
 	}
 	
+	private String regex = "(\\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01]$)"; // Regular expression to validate the date of birth
 	//first parentheses representing 4 digits for year(yyyy) - second parentheses representing first digit could be 0 or not and number 1 to 9
 	// or 1 and second digit being 0, 1 or 2 (mm)- and finally last parentheses representing day of the month which can be started either with or
 	// not with 0 followed by number 1 to 9 or for a number starting with 1 or 2 followed by 0 to 9 or lastly 3 followed by 0 or 1 (dd).
-	private String regex = "(\\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01]$)"; // Regular expression to validate the date of birth
 		
-	//For this part I created a 
+	
+	//Validates if First Name has only letters
 	private boolean isValid(String first_name) {
 			 if(first_name.matches("[a-zA-Z]+")) { //check if string first name matches criteria of being only letters from 'A' to 'Z'
 				 return true;
@@ -153,15 +164,44 @@ public class CloudService extends CloudServiceImplBase{
 			 }
 		 }
 
+	
 	//This will return the size of the list
 	public int size() {
-		return employees.size();
+		int size = 0;
+		Scanner sc;
+		
+		try {
+			File file = new File("Employees_data.csv");
+			if(!file.exists()) {
+			file.createNewFile();
+			}
+			sc = new Scanner(new FileReader(file));
+
+		while (sc.hasNextLine())  //check if has next line
+		{
+			sc.nextLine(); //jumps to next line and increase counter size
+			size++; 
+		}
+		sc.close();  //closes the scanner
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("File not found!");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Problem creating a new file");
+		} 
+		//returns size of the database or 0 if there is no file
+		return size;
+		
 	}
 		
 	// Comparable Employee Record
 	public class Employee implements Comparable<Object>{
 
-		private int empNo;
+		private String empNo;
 		private String dateOfBirth;
 		private String firstName;
 		private String lastName;
@@ -169,9 +209,9 @@ public class CloudService extends CloudServiceImplBase{
 		private String hireDate;
 
 		// constructor
-		public Employee(int empNo, String dateOfBirth, String firstName, String lastName, String gender, String hireDate)
+		public Employee(String data, String dateOfBirth, String firstName, String lastName, String gender, String hireDate)
 		{
-			this.empNo = empNo;
+			this.empNo = data;
 			this.dateOfBirth = dateOfBirth;
 			this.firstName = firstName;
 			this.lastName = lastName;
@@ -179,11 +219,11 @@ public class CloudService extends CloudServiceImplBase{
 			this.hireDate = hireDate;
 		}
 
-		public int getEmpNo() {
+		public String getEmpNo() {
 			return empNo;
 		}
 
-		public void setEmpNo(int empNo) {
+		public void setEmpNo(String empNo) {
 			this.empNo = empNo;
 		}
 
@@ -242,24 +282,63 @@ public class CloudService extends CloudServiceImplBase{
 		}
 	}	
 	
+	private void readFile() throws FileNotFoundException {
+		
+		Scanner sc = new Scanner(new FileReader("employees_data.csv"));
+
+//		sc.nextLine();
+
+		int i = 0; // variable i will be used to track the lines to be copied from the csv file
+		String st;
+		while (sc.hasNextLine())  //returns a boolean value
+		{
+			st = sc.nextLine();
+			String[] data = st.split(",");
+			employees.add(i, new Employee(data[0], data[1], data[2], data[3], data[4], data[5]));
+			i++;
+		}
+		sc.close();  //closes the scanner
+		
+		}
+	
 	public void writeFile() throws IOException {
 		
 		List<String[]> data = new ArrayList<>();
 		
-		for(int i = 0; i< size(); i++) {
+		for(int i = 0; i< employees.size(); i++) {
 			data.add(i, employees.get(i).toString().split(" "));
 		}
 		//Checking if it is collecting the data from ArrayList
-		System.out.println(data.size());
+//		System.out.println(data.size());
 					
 		//WRITING DATA FROM EMPLOYEE (OBJECT) ARRAY LIST INTO CSV FILE
-		try (CSVWriter writer = new CSVWriter(new FileWriter("Employees_data.csv"))) {
+		//it takes too parameters, where it will be saved and set boolean true if wants just to append data to the file or false to overwrite
+		try (CSVWriter writer = new CSVWriter(new FileWriter("Employees_data.csv", true))) { 
                   
 			//Write all items from the data onto CSV file
 			writer.writeAll(data);
-				
-        }		
+			
+        } 
 	}
+	
+//	public void writeOutPut(AddRequest message) throws IOException {
+//		if(!read.contains(message)) {
+//			FileOutputStream outputStream = new FileOutputStream("simple_message.csv", true); //has to surround it with catch to handle any errors
+//			message.writeTo(outputStream);
+//			outputStream.close();
+//		} else {
+//			JOptionPane.showMessageDialog(null, "Sorry, this is a repeated Employee data");
+//		}
+//	}
+//	
+//	private List <AddRequest> read = new ArrayList<>();
+//	
+//	public void readInput() throws IOException {
+//		FileInputStream inputStream = new FileInputStream("simple_message.csv"); //has to surround it with catch to handle any errors
+//		AddRequest messageFromFile = AddRequest.parseFrom(inputStream);
+//		System.out.println(messageFromFile.toString());
+//		
+//	}
 	
 	
 }

@@ -2,14 +2,19 @@ package client;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import CloudManagment.*;
+import capacity_print.capacityServiceGrpc;
+import capacity_print.printRequest;
+import capacity_print.printResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import loginCMP.*;
 import server.ServerCMP;
@@ -36,13 +41,16 @@ public class ClientCMP {
 
 		LoginClient = LoginServiceGrpc.newBlockingStub(channel);
 		CloudClient = CloudServiceGrpc.newStub(channel);
+		CapacityClient = capacityServiceGrpc.newBlockingStub(channel);
 		
 //		login("Patryck", "test");
 //		
 //		System.out.println("Shutting down the channel");
 //		logout("Patryck");
 		
-		InsertData();
+//		InsertData(2);
+		
+		print();
 		
 		channel.shutdown();
 		
@@ -55,6 +63,7 @@ public class ClientCMP {
 	/*------------------------ Blocking Stub and Async Stub are initialized here ----------------*/
 	private static LoginServiceGrpc.LoginServiceBlockingStub LoginClient;
 	private static CloudServiceGrpc.CloudServiceStub CloudClient;
+	private static capacityServiceGrpc.capacityServiceBlockingStub CapacityClient;
 	
 	
 	
@@ -86,7 +95,7 @@ public class ClientCMP {
 		}
 	
 	
-	public static void InsertData() {
+	public static void InsertData(int numbOfData) {
 		CountDownLatch latch = new CountDownLatch(1);
 		
 		StreamObserver<AddRequest> requestObserver = CloudClient.add( new StreamObserver <ResponseMessage>(){
@@ -94,7 +103,7 @@ public class ClientCMP {
 			@Override
 			public void onNext(ResponseMessage value) {
 				// TODO Auto-generated method stub
-				
+				System.out.println(value.getResponse());
 			}
 
 			@Override
@@ -108,6 +117,7 @@ public class ClientCMP {
 				// the server is done sending us data
 				// onCompleted will be called right after onNext();
 				System.out.println("Server has completed sending messages");
+				
 				latch.countDown();
 			}
 
@@ -115,7 +125,7 @@ public class ClientCMP {
 			
 		});
 		
-		List<AddRequest> requests = new ArrayList<>();
+		AddRequest request;
 		Scanner sc = new Scanner(System.in);
 		String dateOfBirth = "";
 		String firstName = "";
@@ -124,7 +134,7 @@ public class ClientCMP {
 		String hireDate = "";
 		
 		//This will set each field individually by prompting to the client
-		for (int i = 0; i< 2; i++) {
+		for (int i = 0; i< numbOfData; i++) {
 		System.out.println("Please enter date of birth of the Employee (yyyy-mm-dd): ");
 		dateOfBirth = sc.nextLine();
 		
@@ -140,21 +150,18 @@ public class ClientCMP {
 		System.out.println("Please enter Date of the Employee is being hired (yyyy-mm-dd): ");
 		hireDate = sc.nextLine();
 		
-		requests.add(AddRequest.newBuilder().setDateOfBirth(dateOfBirth)
+		request = AddRequest.newBuilder().setDateOfBirth(dateOfBirth)
 				.setFirstName(firstName)
 				.setLastName(lastName)
 				.setGender(gender)
 				.setHireDate(hireDate)
-				.build());
+				.build();
+		
+		//Send each request one by one
+		requestObserver.onNext(request);
 		
 		}
-		
-		//This will send all requests one by one
-		for (int i = 0; i< requests.size(); i ++) {
-			requestObserver.onNext(requests.get(i));
-		}
-		
-		
+				
 		requestObserver.onCompleted();
 		
 			
@@ -167,6 +174,25 @@ public class ClientCMP {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	
+	public static void print() {
+		printRequest print = printRequest.newBuilder().setPrint(true).build();
+		
+		try {
+			Iterator<printResponse> responces = CapacityClient.print(print);
+			
+			while(responces.hasNext()) {
+				printResponse temp = responces.next();
+				System.out.println(temp.getPrinting());				
+			}
+
+		} catch (StatusRuntimeException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 	

@@ -19,14 +19,13 @@ service CloudService{
 }
 
 message AddRequest{
-	int32 empNo = 1;
+	string empNo = 1;
 	string dateOfBirth = 2;
 	string firstName = 3;
 	string lastName = 4;
 	string gender = 5;
 	string hireDate = 6;
 }
-
 
 message ResponseMessage {
 	string response = 1;

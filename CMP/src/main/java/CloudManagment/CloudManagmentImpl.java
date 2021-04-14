@@ -39,7 +39,7 @@ public final class CloudManagmentImpl {
   static {
     java.lang.String[] descriptorData = {
       "\n\013cloud.proto\022\016CloudManagment\"w\n\nAddRequ" +
-      "est\022\r\n\005empNo\030\001 \001(\005\022\023\n\013dateOfBirth\030\002 \001(\t\022" +
+      "est\022\r\n\005empNo\030\001 \001(\t\022\023\n\013dateOfBirth\030\002 \001(\t\022" +
       "\021\n\tfirstName\030\003 \001(\t\022\020\n\010lastName\030\004 \001(\t\022\016\n\006" +
       "gender\030\005 \001(\t\022\020\n\010hireDate\030\006 \001(\t\"#\n\017Respon" +
       "seMessage\022\020\n\010response\030\001 \001(\t\"\036\n\rRemoveReq" +
