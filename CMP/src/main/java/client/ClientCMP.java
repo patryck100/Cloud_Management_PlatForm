@@ -1,12 +1,15 @@
 package client;
 
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import javax.jmdns.*;
 
 import CloudManagment.*;
 import capacity_print.capacityServiceGrpc;
@@ -20,45 +23,204 @@ import loginCMP.*;
 import server.ServerCMP;
 
 public class ClientCMP {
+	
+
 
 	public static void main(String[] args) {
-		ServerCMP server = new ServerCMP();
-		Thread t = new Thread(server);
-		try {
-		t.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if(t.isAlive()) {
+//		ServerCMP server = new ServerCMP();
+//		Thread t = new Thread(server);
+//		
+//		
+//		try {
+//		t.start();
+//		
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if(t.isAlive()) {
+		
+		ClientCMP client = new ClientCMP();
+		
+		// discover the service
+	    String login_service_type = "_loginCMP._tcp.local.";
+	    discoverService(login_service_type);
+	    
+//	    String host = client.serviceInfo.getHostAddresses()[0];
+//		port = serviceInfo.getPort();
+	    
+	    String cloud_service_type = "_cloud._tcp.local.";
+		client.discoverService(cloud_service_type);
+		
+		String capacity_service_type = "_capacity._tcp.local.";
+		client.discoverService(capacity_service_type);
 		
 		
 		System.out.println("Starting the Client Cloud Managment Platform...");
 		
 		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+		ManagedChannel channel1 = ManagedChannelBuilder.forAddress("localhost", 50051)//.forAddress("localhost", 50050).forAddress("localhost", 50052)
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
-
-		LoginClient = LoginServiceGrpc.newBlockingStub(channel);
-		CloudClient = CloudServiceGrpc.newStub(channel);
-		CapacityClient = capacityServiceGrpc.newBlockingStub(channel);
 		
-//		login("Patryck", "test");
+		ManagedChannel channel2 = ManagedChannelBuilder.forAddress("localhost", 50050)
+				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
+				.build();
+		
+		ManagedChannel channel3 = ManagedChannelBuilder.forAddress("localhost", 50052)
+				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
+				.build();
+
+		LoginClient = LoginServiceGrpc.newBlockingStub(channel1);
+		CloudClient = CloudServiceGrpc.newStub(channel3);
+		CapacityClient = capacityServiceGrpc.newBlockingStub(channel2);
+		
+		login("Patryck", "test");
 //		
 //		System.out.println("Shutting down the channel");
 //		logout("Patryck");
 		
 //		InsertData(2);
 		
-		print();
+//		client.loginChannel();
+//		client.capacityChannel();
+//		client.cloudChannel();
 		
-		channel.shutdown();
+//		print();
 		
-		t.stop(); //stops server so then if the client run again it wont give exceptions for server being running already
-		}
+		channel1.shutdown();
+		channel2.shutdown();
+		channel3.shutdown();
 		
+//		t.stop(); //stops server so then if the client run again it wont give exceptions for server being running already
+//		}
+		
+//		ClientCMP client = new ClientCMP();
+//		
+//		client.run();
+//		
 		
 	}
+	
+	
+	
+	/* --------------- Initializing a channel for each service ----------------*/
+	
+	
+	// jmdns - service info
+    private static ServiceInfo serviceInfo;
+    private static int port = 0;
+	
+	
+	
+	public void loginChannel() {
+		
+		// discover the service
+	    String login_service_type = "_loginCMP._tcp.local.";
+	    discoverService(login_service_type);
+	    
+	    String host = serviceInfo.getHostAddresses()[0];
+        int port = serviceInfo.getPort();
+		
+		System.out.println("Starting login channel...");
+		
+		
+		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
+					.build();
+
+		LoginClient = LoginServiceGrpc.newBlockingStub(channel);
+		
+	}
+	
+	public void cloudChannel() {
+
+		// discover the service
+		String cloud_service_type = "_cloud._tcp.local.";
+		discoverService(cloud_service_type);
+
+		String host = serviceInfo.getHostAddresses()[0];
+		int port = serviceInfo.getPort();
+
+		System.out.println("Starting login channel...");
+		
+		
+		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
+					.build();
+
+		CloudClient = CloudServiceGrpc.newStub(channel);
+				
+	}
+	
+
+	public void capacityChannel() {
+
+		// discover the service
+		String capacity_service_type = "_capacity._tcp.local.";
+		discoverService(capacity_service_type);
+
+		String host = serviceInfo.getHostAddresses()[0];
+		int port = serviceInfo.getPort();
+
+		System.out.println("Starting Capacity channel...");
+	
+	
+		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
+				.build();
+
+		CapacityClient = capacityServiceGrpc.newBlockingStub(channel);
+
+	}
+	
+	
+	
+
+	
+	// jmDNS discovery service (non-static method)
+    private static void discoverService(String service_type) {
+        try {
+            // Create a JmDNS instance
+            JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+            jmdns.addServiceListener(service_type, new ServiceListener() {
+                @Override
+                public void serviceResolved(ServiceEvent event) {
+                    System.out.println("Service resolved: " + event.getInfo());
+                    serviceInfo = event.getInfo();
+                    port = serviceInfo.getPort();
+                    System.out.println("resolving " + service_type + " with properties ...");
+                    System.out.println("\t port: " + port);
+                    System.out.println("\t type:" + event.getType());
+                    System.out.println("\t name: " + event.getName());
+                    System.out.println("\t description/properties: " + serviceInfo.getNiceTextString());
+                    System.out.println("\t host: " + serviceInfo.getHostAddresses()[0]);
+                }
+                @Override
+                public void serviceRemoved(ServiceEvent event) {
+                    System.out.println("Service removed: " + event.getInfo());
+                }
+                @Override
+                public void serviceAdded(ServiceEvent event) {
+                    System.out.println("Service added: " + event.getInfo());
+                }
+            });
+            // Wait a bit
+            Thread.sleep(2000);
+            jmdns.close();
+        } catch (UnknownHostException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+		
+	
+	
+	
+	
 	
 	/*------------------------ Blocking Stub and Async Stub are initialized here ----------------*/
 	private static LoginServiceGrpc.LoginServiceBlockingStub LoginClient;
@@ -92,6 +254,7 @@ public class ClientCMP {
 		int responseCode = response.getResponseCode();
 
 		System.out.println("Response from Server: " + response.getResponseMessage());
+		
 		}
 	
 	

@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import client.ClientCMP;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -23,6 +26,10 @@ public class Cloud_Managment_Platform_app {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
+		
+		
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -63,6 +70,8 @@ public class Cloud_Managment_Platform_app {
 		//When clicked on the "Login" button...
 		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			ClientCMP startLogin = new ClientCMP();
+			startLogin.login(LoginText.getText(), passwordField.getPassword().toString());
 			JOptionPane.showMessageDialog(LoginButton, "Hello");
 			}
 		});

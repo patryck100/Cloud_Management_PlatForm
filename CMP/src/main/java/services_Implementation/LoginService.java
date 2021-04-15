@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import io.grpc.stub.StreamObserver;
 import loginCMP.*;
@@ -117,6 +119,31 @@ public class LoginService extends LoginServiceImplBase{
 		}
 		
 		
+	}
+	
+	public Properties getProperties() {
+
+		Properties prop = null;
+
+		try (InputStream input = new FileInputStream("src/main/resources/loginCMP.properties")) {
+
+			prop = new Properties();
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			System.out.println("CMP Service properies ...");
+			System.out.println("\t service_type: " + prop.getProperty("service_type"));
+			System.out.println("\t service_name: " + prop.getProperty("service_name"));
+			System.out.println("\t service_description: " + prop.getProperty("service_description"));
+			System.out.println("\t service_port: " + prop.getProperty("service_port"));
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return prop;
 	}
 
 	

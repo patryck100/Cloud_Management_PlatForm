@@ -11,8 +11,8 @@ package CMP;
 // The services goes here.
 service LoginService {
   //unary(unique request and response)
-  rpc login (LoginRequest) returns (LoginResponse) {}
-  rpc logout(LogoutRequest) returns (LogoutResponse){}
+  rpc login (LoginRequest) returns (LoginResponse) {};
+  rpc logout(LogoutRequest) returns (LogoutResponse){};
 
 }
 

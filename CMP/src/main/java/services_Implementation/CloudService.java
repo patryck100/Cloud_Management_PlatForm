@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -32,6 +33,7 @@ public class CloudService extends CloudServiceImplBase{
 		StreamObserver<AddRequest> requestObserver = new StreamObserver<AddRequest>() {
 			
 			String nextID;
+			String response = "";
 			int size = size();
 			@Override
 			public void onNext(AddRequest value) {
@@ -43,14 +45,14 @@ public class CloudService extends CloudServiceImplBase{
 									size++;
 									nextID = ""+(size);									 
 									employees.add(new Employee(nextID, value.getDateOfBirth(), value.getFirstName(), value.getLastName(), value.getGender(), value.getHireDate()));
-									JOptionPane.showMessageDialog(null, "Employee: " + employees.get(counter) + " added successfully");
+									response += "Employee: " + employees.get(counter) + " added successfully" + "\n";
 									counter++; //keeps track of the Employee record
 								} else
 									try {
 										if (!over18(value.getDateOfBirth())) {
-											JOptionPane.showMessageDialog(null, "Invalid Date of Birth: " + value.getDateOfBirth() + " (below the employment age)");
+											response += "Employee: " + value + " has invalid Date of Birth: " + value.getDateOfBirth() + " (below the employment age)"+ "\n";
 										} else {
-											JOptionPane.showMessageDialog(null, "Invalid Date of Birth: " + value.getDateOfBirth() + " (above retirement age)");
+											response += "Employee: " + value + " has invalid Date of Birth: " + value.getDateOfBirth() + " (above retirement age)"+ "\n";
 										}
 									} catch (HeadlessException | ParseException e) {
 										// TODO Auto-generated catch block
@@ -61,7 +63,7 @@ public class CloudService extends CloudServiceImplBase{
 								e.printStackTrace();
 							}
 					}else {
-						JOptionPane.showMessageDialog(null, "Invalid data! Employee was not added to the list!");
+						response += "Invalid data! Record: " + value + " was not added to the list!"+ "\n";
 					}
 				
 			}
@@ -82,7 +84,7 @@ public class CloudService extends CloudServiceImplBase{
 					writeFile();
 					
 					ResponseMessage message = ResponseMessage.newBuilder()
-							.setResponse("The Employee record was updated! New size: " + (size))
+							.setResponse(response + "The Employee record was updated! New size: " + (size))
 							.build();
 
 					responseObserver.onNext(message);
@@ -320,6 +322,32 @@ public class CloudService extends CloudServiceImplBase{
 			
         } 
 	}
+	
+	public Properties getProperties() {
+
+		Properties prop = null;
+
+		try (InputStream input = new FileInputStream("src/main/resources/cloud.properties")) {
+
+			prop = new Properties();
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			System.out.println("CMP Service properies ...");
+			System.out.println("\t service_type: " + prop.getProperty("service_type"));
+			System.out.println("\t service_name: " + prop.getProperty("service_name"));
+			System.out.println("\t service_description: " + prop.getProperty("service_description"));
+			System.out.println("\t service_port: " + prop.getProperty("service_port"));
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return prop;
+	}
+	
 	
 //	public void writeOutPut(AddRequest message) throws IOException {
 //		if(!read.contains(message)) {
