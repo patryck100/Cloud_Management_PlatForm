@@ -167,25 +167,26 @@ public class CloudService extends CloudServiceImplBase{
 		 }
 
 	
-	//This will return the size of the list
+	//This will return the number of records into the database ( represented by the file "Employees_data.csv")
 	public int size() {
 		int size = 0;
 		Scanner sc;
 		
 		try {
 			File file = new File("Employees_data.csv");
-			if(!file.exists()) {
+			if(!file.exists()) { //If there is no such a file, it generates one
 			file.createNewFile();
 			}
 			sc = new Scanner(new FileReader(file));
 
 		while (sc.hasNextLine())  //check if has next line
-		{
-			sc.nextLine(); //jumps to next line and increase counter size
+		{	//jumps to next line and increase counter size
+			sc.nextLine(); 
 			size++; 
 		}
 		sc.close();  //closes the scanner
 		
+		//error handling
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -198,91 +199,9 @@ public class CloudService extends CloudServiceImplBase{
 		//returns size of the database or 0 if there is no file
 		return size;
 		
-	}
+	}// end of size() function
 		
-	// Comparable Employee Record
-	public class Employee implements Comparable<Object>{
-
-		private String empNo;
-		private String dateOfBirth;
-		private String firstName;
-		private String lastName;
-		private String gender;
-		private String hireDate;
-
-		// constructor
-		public Employee(String data, String dateOfBirth, String firstName, String lastName, String gender, String hireDate)
-		{
-			this.empNo = data;
-			this.dateOfBirth = dateOfBirth;
-			this.firstName = firstName;
-			this.lastName = lastName;
-			this.gender = gender;
-			this.hireDate = hireDate;
-		}
-
-		public String getEmpNo() {
-			return empNo;
-		}
-
-		public void setEmpNo(String empNo) {
-			this.empNo = empNo;
-		}
-
-		public String getDateOfBirth() {
-			return dateOfBirth;
-		}
-
-		public void setDateOfBirth(String dateOfBirth) {
-			this.dateOfBirth = dateOfBirth;
-		}
-
-		public String getFirstName() {
-			return firstName;
-		}
-
-		public void setFirstName(String firstName) {
-			this.firstName = firstName;
-		}
-
-		public String getLastName() {
-			return lastName;
-		}
-
-		public void setLastName(String lastName) {
-			this.lastName = lastName;
-		}
-
-		public String getGender() {
-			return gender;
-		}
-
-		public void setGender(String gender) {
-			this.gender = gender;
-		}
-
-		public String getHireDate() {
-			return hireDate;
-		}
-
-		public void setHireDate(String hireDate) {
-			this.hireDate = hireDate;
-		}
-
-		// so the employee objects can be compared when sorting/searching
-		// NOTE: this will only allow comparisons based on the firstName
-		public int compareTo(Object obj) {
-			Employee emp = (Employee)obj;
-			return firstName.compareTo(emp.getFirstName());
-		}
-
-		// return a String containing the employee details
-		@Override
-		public String toString()
-		{
-			return empNo+" "+dateOfBirth+" "+firstName+" "+lastName+" "+gender +" "+ hireDate;
-		}
-	}	
+		
 	
 	private void readFile() throws FileNotFoundException {
 		
@@ -290,7 +209,7 @@ public class CloudService extends CloudServiceImplBase{
 
 //		sc.nextLine();
 
-		int i = 0; // variable i will be used to track the lines to be copied from the csv file
+		int i = 0; // variable "i" will be used to track the lines to be copied from the csv file
 		String st;
 		while (sc.hasNextLine())  //returns a boolean value
 		{
@@ -303,6 +222,7 @@ public class CloudService extends CloudServiceImplBase{
 		
 		}
 	
+	//Writes into the database (represented by the "employees_data.csv" file)
 	public void writeFile() throws IOException {
 		
 		List<String[]> data = new ArrayList<>();
@@ -314,7 +234,8 @@ public class CloudService extends CloudServiceImplBase{
 //		System.out.println(data.size());
 					
 		//WRITING DATA FROM EMPLOYEE (OBJECT) ARRAY LIST INTO CSV FILE
-		//it takes too parameters, where it will be saved and set boolean true if wants just to append data to the file or false to overwrite
+		//it takes too parameters, address where it will be saved and a boolean which is set to true if wants just to append data to the file
+		//or false to overwrite and generate a new file
 		try (CSVWriter writer = new CSVWriter(new FileWriter("Employees_data.csv", true))) { 
                   
 			//Write all items from the data onto CSV file
@@ -323,6 +244,7 @@ public class CloudService extends CloudServiceImplBase{
         } 
 	}
 	
+	//Returns the properties of the service
 	public Properties getProperties() {
 
 		Properties prop = null;
@@ -347,6 +269,90 @@ public class CloudService extends CloudServiceImplBase{
 
 		return prop;
 	}
+	
+	// Comparable Employee class, used to store each Record
+		public class Employee implements Comparable<Object>{
+
+			private String empNo;
+			private String dateOfBirth;
+			private String firstName;
+			private String lastName;
+			private String gender;
+			private String hireDate;
+
+			// constructor
+			public Employee(String data, String dateOfBirth, String firstName, String lastName, String gender, String hireDate)
+			{
+				this.empNo = data;
+				this.dateOfBirth = dateOfBirth;
+				this.firstName = firstName;
+				this.lastName = lastName;
+				this.gender = gender;
+				this.hireDate = hireDate;
+			}
+
+			public String getEmpNo() {
+				return empNo;
+			}
+
+			public void setEmpNo(String empNo) {
+				this.empNo = empNo;
+			}
+
+			public String getDateOfBirth() {
+				return dateOfBirth;
+			}
+
+			public void setDateOfBirth(String dateOfBirth) {
+				this.dateOfBirth = dateOfBirth;
+			}
+
+			public String getFirstName() {
+				return firstName;
+			}
+
+			public void setFirstName(String firstName) {
+				this.firstName = firstName;
+			}
+
+			public String getLastName() {
+				return lastName;
+			}
+
+			public void setLastName(String lastName) {
+				this.lastName = lastName;
+			}
+
+			public String getGender() {
+				return gender;
+			}
+
+			public void setGender(String gender) {
+				this.gender = gender;
+			}
+
+			public String getHireDate() {
+				return hireDate;
+			}
+
+			public void setHireDate(String hireDate) {
+				this.hireDate = hireDate;
+			}
+
+			// so the employee objects can be compared when sorting/searching
+			// NOTE: this will only allow comparisons based on the firstName
+			public int compareTo(Object obj) {
+				Employee emp = (Employee)obj;
+				return firstName.compareTo(emp.getFirstName());
+			}
+
+			// return a String containing the employee details
+			@Override
+			public String toString()
+			{
+				return empNo+" "+dateOfBirth+" "+firstName+" "+lastName+" "+gender +" "+ hireDate;
+			}
+		}
 	
 	
 //	public void writeOutPut(AddRequest message) throws IOException {

@@ -37,7 +37,8 @@ public class CapacityService extends capacityServiceImplBase {
 						
 				//Starting with the header
 				responseObserver.onNext(printResponse.newBuilder()
-						.setPrinting("EmpNo, Date Of Birth, First Name, Last Name, Gender, Hire Date")
+						.setPrinting("Printing data from your cloud... \n"
+								+ "EmpNo, Date Of Birth, First Name, Last Name, Gender, Hire Date")
 						.build());
 				
 				

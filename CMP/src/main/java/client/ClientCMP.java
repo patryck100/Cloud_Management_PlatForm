@@ -9,8 +9,10 @@ import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import javax.jmdns.*;
-
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceInfo;
+import javax.jmdns.ServiceListener;
 import CloudManagment.*;
 import capacity_print.capacityServiceGrpc;
 import capacity_print.printRequest;
@@ -39,45 +41,66 @@ public class ClientCMP {
 //		}
 //		if(t.isAlive()) {
 		
-		ClientCMP client = new ClientCMP();
 		
-		// discover the service
-	    String login_service_type = "_loginCMP._tcp.local.";
-	    discoverService(login_service_type);
+		
+		
+		System.out.println("Starting the jmdns, please wait, it will take a moment...");
+		
+		
+
+		String login_service_type = "_loginCMP._tcp.local.";
+	    serviceInfo_LoginChannel = client.discover(login_service_type);
 	    
-//	    String host = client.serviceInfo.getHostAddresses()[0];
-//		port = serviceInfo.getPort();
+	    String capacity_service_type = "_capacity._tcp.local.";
+	    serviceInfo_CapacityChannel = client.discover(capacity_service_type);
 	    
 	    String cloud_service_type = "_cloud._tcp.local.";
-		client.discoverService(cloud_service_type);
+	    serviceInfo_CloudChannel = client.discover(cloud_service_type);
+
+
+
+//	    try {	
+//		String capacity_service_type = "_capacity._tcp.local.";
+//		serviceInfo2 = discover.discoverService(capacity_service_type);
+//		Thread.sleep(3000);
+//	    } catch (Exception e) {}
+//
+//		try {
+//	    String cloud_service_type = "_cloud._tcp.local.";
+//	    serviceInfo3 = discover.discoverService(cloud_service_type);
+//	    Thread.sleep(3000);
+//		} catch (Exception e) {}
+
+	    
 		
-		String capacity_service_type = "_capacity._tcp.local.";
-		client.discoverService(capacity_service_type);
-		
-		
+	    String host_Login = ""+serviceInfo_LoginChannel.getHostAddresses()[0];
+		int port_Login = serviceInfo_LoginChannel.getPort();
+	    String host_Capacity = ""+serviceInfo_CapacityChannel.getHostAddresses()[0];
+		int port_Capacity = serviceInfo_CapacityChannel.getPort();
+	    String host_Cloud = ""+serviceInfo_CloudChannel.getHostAddresses()[0];
+		int port_Cloud = serviceInfo_CloudChannel.getPort();
+	    
 		System.out.println("Starting the Client Cloud Managment Platform...");
 		
-		
-		ManagedChannel channel1 = ManagedChannelBuilder.forAddress("localhost", 50051)//.forAddress("localhost", 50050).forAddress("localhost", 50052)
+				
+		ManagedChannel login_Channel = ManagedChannelBuilder.forAddress("localhost", port_Login)//.forAddress("localhost", 50050).forAddress("localhost", 50052)
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
 		
-		ManagedChannel channel2 = ManagedChannelBuilder.forAddress("localhost", 50050)
+		ManagedChannel capacity_Channel = ManagedChannelBuilder.forAddress("localhost", port_Capacity)
 				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 				.build();
 		
-		ManagedChannel channel3 = ManagedChannelBuilder.forAddress("localhost", 50052)
+		ManagedChannel cloud_Channel = ManagedChannelBuilder.forAddress("localhost", port_Cloud)
 				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 				.build();
 
-		LoginClient = LoginServiceGrpc.newBlockingStub(channel1);
-		CloudClient = CloudServiceGrpc.newStub(channel3);
-		CapacityClient = capacityServiceGrpc.newBlockingStub(channel2);
+		LoginClient = LoginServiceGrpc.newBlockingStub(login_Channel);
+		CloudClient = CloudServiceGrpc.newStub(cloud_Channel);
+		CapacityClient = capacityServiceGrpc.newBlockingStub(capacity_Channel);
 		
 		login("Patryck", "test");
-//		
-//		System.out.println("Shutting down the channel");
-//		logout("Patryck");
+
 		
 //		InsertData(2);
 		
@@ -85,11 +108,14 @@ public class ClientCMP {
 //		client.capacityChannel();
 //		client.cloudChannel();
 		
-//		print();
+		print();
 		
-		channel1.shutdown();
-		channel2.shutdown();
-		channel3.shutdown();
+		System.out.println("Shutting down the channel");
+		logout("Patryck");
+		
+		login_Channel.shutdown();
+		capacity_Channel.shutdown();
+		cloud_Channel.shutdown();
 		
 //		t.stop(); //stops server so then if the client run again it wont give exceptions for server being running already
 //		}
@@ -103,28 +129,76 @@ public class ClientCMP {
 	
 	
 	
-	/* --------------- Initializing a channel for each service ----------------*/
+	/*-------- Discovering the services ---------------*/
+	
+	// jmdns - service info for each channel
+	private static ServiceInfo serviceInfo_LoginChannel = null;
+	private static ServiceInfo serviceInfo_CapacityChannel = null;
+	private static ServiceInfo serviceInfo_CloudChannel = null;
+	
+	public ServiceInfo discover(String str) {
+		ServiceInfo serviceInfo = null;
+		try {
+    		DiscoverServices ds = new DiscoverServices();
+            // Create a JmDNS instance
+			//When a macbook call the "InetAddress" it returns "MacBook-model." and then local host. It gave me an error before
+			//and the solution was to use this method and collect only the address after the "/" and write "local/" before
+    		String address = InetAddress.getLocalHost().toString().split("/")[1];
+            JmDNS jmdns = JmDNS.create("local/" + address);
+//            ServiceDiscover sd = new ServiceDiscover();
+//            
+//            jmdns.addServiceListener(str, sd);
+            
+//            serviceInfo = sd.getServiceInfo();
+    		serviceInfo = ds.discoverService(str);
+    		
+            
+            // Wait a bit
+            Thread.sleep(3000);
+            jmdns.close();
+        } catch (UnknownHostException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return serviceInfo;
+		
+	}
+
+	
+	/*------------------------ Creating a variable Blocking Stub or Async Stub for each specific client channel ----------------*/
+	private static LoginServiceGrpc.LoginServiceBlockingStub LoginClient;
+	private static CloudServiceGrpc.CloudServiceStub CloudClient;
+	private static capacityServiceGrpc.capacityServiceBlockingStub CapacityClient;
 	
 	
-	// jmdns - service info
-    private static ServiceInfo serviceInfo;
-    private static int port = 0;
-	
-	
-	
+	/* --------------------------- Initializing a channel for each service --------------------------*/
+	 //(make the connection faster since it only creates a channel for each service needed for the specific service)
+    
+
+	//instance of the ClientCMP class
+    private static ClientCMP client = new ClientCMP();
+    
+   
+	//This channel gives access to the login and logout services
 	public void loginChannel() {
 		
 		// discover the service
 	    String login_service_type = "_loginCMP._tcp.local.";
-	    discoverService(login_service_type);
+	    serviceInfo_LoginChannel = client.discover(login_service_type);
 	    
-	    String host = serviceInfo.getHostAddresses()[0];
-        int port = serviceInfo.getPort();
+	    /*----- Gets the local host and port number to be set on the channel -------*/
+//	    String host = serviceInfo.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
+        int port = serviceInfo_LoginChannel.getPort();
 		
 		System.out.println("Starting login channel...");
 		
 		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
 
@@ -132,19 +206,42 @@ public class ClientCMP {
 		
 	}
 	
+	//This channel gives access to the print and change storage services
+	public void capacityChannel() {
+
+		// discover the service
+		String capacity_service_type = "_capacity._tcp.local.";
+		serviceInfo_CapacityChannel = client.discover(capacity_service_type);
+		
+		/*----- Gets the local host and port number to be set on the channel -------*/
+//		String host = serviceInfo3.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
+		int port = serviceInfo_CapacityChannel.getPort(); 
+
+		System.out.println("Starting Capacity channel...");
+	
+	
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
+				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
+				.build();
+
+		CapacityClient = capacityServiceGrpc.newBlockingStub(channel);
+
+	}
+	
 	public void cloudChannel() {
 
 		// discover the service
 		String cloud_service_type = "_cloud._tcp.local.";
-		discoverService(cloud_service_type);
-
-		String host = serviceInfo.getHostAddresses()[0];
-		int port = serviceInfo.getPort();
+		serviceInfo_CloudChannel = client.discover(cloud_service_type);
+		
+		/*----- Gets the local host and port number to be set on the channel -------*/
+//		String host = serviceInfo2.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
+		int port = serviceInfo_CloudChannel.getPort();
 
 		System.out.println("Starting login channel...");
 		
 		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
 
@@ -153,83 +250,11 @@ public class ClientCMP {
 	}
 	
 
-	public void capacityChannel() {
-
-		// discover the service
-		String capacity_service_type = "_capacity._tcp.local.";
-		discoverService(capacity_service_type);
-
-		String host = serviceInfo.getHostAddresses()[0];
-		int port = serviceInfo.getPort();
-
-		System.out.println("Starting Capacity channel...");
-	
-	
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
-				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
-				.build();
-
-		CapacityClient = capacityServiceGrpc.newBlockingStub(channel);
-
-	}
-	
 	
 	
 
 	
-	// jmDNS discovery service (non-static method)
-    private static void discoverService(String service_type) {
-        try {
-            // Create a JmDNS instance
-            JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
-            jmdns.addServiceListener(service_type, new ServiceListener() {
-                @Override
-                public void serviceResolved(ServiceEvent event) {
-                    System.out.println("Service resolved: " + event.getInfo());
-                    serviceInfo = event.getInfo();
-                    port = serviceInfo.getPort();
-                    System.out.println("resolving " + service_type + " with properties ...");
-                    System.out.println("\t port: " + port);
-                    System.out.println("\t type:" + event.getType());
-                    System.out.println("\t name: " + event.getName());
-                    System.out.println("\t description/properties: " + serviceInfo.getNiceTextString());
-                    System.out.println("\t host: " + serviceInfo.getHostAddresses()[0]);
-                }
-                @Override
-                public void serviceRemoved(ServiceEvent event) {
-                    System.out.println("Service removed: " + event.getInfo());
-                }
-                @Override
-                public void serviceAdded(ServiceEvent event) {
-                    System.out.println("Service added: " + event.getInfo());
-                }
-            });
-            // Wait a bit
-            Thread.sleep(2000);
-            jmdns.close();
-        } catch (UnknownHostException e) {
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-		
-	
-	
-	
-	
-	
-	/*------------------------ Blocking Stub and Async Stub are initialized here ----------------*/
-	private static LoginServiceGrpc.LoginServiceBlockingStub LoginClient;
-	private static CloudServiceGrpc.CloudServiceStub CloudClient;
-	private static capacityServiceGrpc.capacityServiceBlockingStub CapacityClient;
-	
-	
-	
-	/* ------------------------- Client Implementation ---------------------*/
+	/* ------------------------- Client Implementation starts here ---------------------*/
 	
 	//Unary API
 	//Passes as parameters an userName and password which will be validated against a database into the server
@@ -240,7 +265,7 @@ public class ClientCMP {
 		
 		System.out.println(response.getResponseMessage());
 		
-	}
+	} //end of login function
 	
 	
 	//Unary API, validates user name against a database into the server to attempt logout
@@ -255,10 +280,13 @@ public class ClientCMP {
 
 		System.out.println("Response from Server: " + response.getResponseMessage());
 		
-		}
+		} //end of logout function
 	
 	
+	//Client Streaming API, gives the number of input as parameter. Insert data into database in the server side
 	public static void InsertData(int numbOfData) {
+		
+		//Blocks the channel and waits for the response from the server when client send "onComplete"  
 		CountDownLatch latch = new CountDownLatch(1);
 		
 		StreamObserver<AddRequest> requestObserver = CloudClient.add( new StreamObserver <ResponseMessage>(){
@@ -281,12 +309,13 @@ public class ClientCMP {
 				// onCompleted will be called right after onNext();
 				System.out.println("Server has completed sending messages");
 				
+				//Client finished sending requests, so it count down waiting for the server's response
 				latch.countDown();
 			}
 
 			
 			
-		});
+		}); //end of "requestObserver"
 		
 		AddRequest request;
 		Scanner sc = new Scanner(System.in);
@@ -313,6 +342,7 @@ public class ClientCMP {
 		System.out.println("Please enter Date of the Employee is being hired (yyyy-mm-dd): ");
 		hireDate = sc.nextLine();
 		
+		//Set values to the the request
 		request = AddRequest.newBuilder().setDateOfBirth(dateOfBirth)
 				.setFirstName(firstName)
 				.setLastName(lastName)
@@ -323,8 +353,9 @@ public class ClientCMP {
 		//Send each request one by one
 		requestObserver.onNext(request);
 		
-		}
-				
+		}// end of for loop
+		
+		//Tell the server that the client has completed sending requests
 		requestObserver.onCompleted();
 		
 			
@@ -338,26 +369,30 @@ public class ClientCMP {
 			e.printStackTrace();
 		}
 		
-	}
+	} //end of "instertData" function
 	
-	
+	//Server Streaming, the client makes one request and the server sends many responses.
 	public static void print() {
+		// Client request
 		printRequest print = printRequest.newBuilder().setPrint(true).build();
 		
+
 		try {
 			Iterator<printResponse> responces = CapacityClient.print(print);
 			
+			//This loop will print each of the responses while the server is still sending it 
 			while(responces.hasNext()) {
 				printResponse temp = responces.next();
-				System.out.println(temp.getPrinting());				
-			}
+				System.out.println(temp.getPrinting());	
+				
+			} //end of while loop
 
 		} catch (StatusRuntimeException e) {
 			e.printStackTrace();
 		}
 		
 		
-	}
+	}// end of Print function
 	
 	
 	
