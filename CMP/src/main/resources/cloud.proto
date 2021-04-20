@@ -1,23 +1,22 @@
-syntax = "proto3";
+syntax = "proto3"; // version of the protocol buffer being used
 
-option java_multiple_files = true;
-option java_package = "CloudManagment";
-option java_outer_classname = "CloudManagmentImpl";
+option java_multiple_files = true; // instead of generating code in an unique file, it generates multiple files
+option java_package = "CloudManagment"; //name of the package where the gRPC code will be generated
+option java_outer_classname = "CloudManagmentImpl"; //name of the class which will be extended to implemente the grpc code
 
 package CloudManagment;
 
-service CloudService{
+service CloudService{ //name of the service
 	
 	//Client Streaming API (Client willl be able to send many add request and receive a final result)
 	rpc add(stream AddRequest) returns (ResponseMessage){};
 	
-	//Bidirectional Streaming API
+	//Bidirectional Streaming API (Client gets respective response for each request, and final result)
 	rpc remove(stream RemoveRequest) returns (stream ResponseMessage){};
 	
-	//There will be one more (Alter) which will be implemented later
-
 }
 
+//message request for add method
 message AddRequest{
 	string empNo = 1;
 	string dateOfBirth = 2;
@@ -27,12 +26,15 @@ message AddRequest{
 	string hireDate = 6;
 }
 
+//response message for both add and remove methods
 message ResponseMessage {
 	string response = 1;
 }
 
+//message request for remove method
 message RemoveRequest {
-	int32 empNo = 1;
+	string empNo = 1;
+	string firstName = 2;
 }
 
 

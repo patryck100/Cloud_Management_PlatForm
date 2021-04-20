@@ -16,6 +16,9 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
+ * <pre>
+ *name of the service
+ * </pre>
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.15.0)",
@@ -115,6 +118,9 @@ public final class CloudServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static abstract class CloudServiceImplBase implements io.grpc.BindableService {
 
@@ -130,7 +136,7 @@ public final class CloudServiceGrpc {
 
     /**
      * <pre>
-     *Bidirectional Streaming API
+     *Bidirectional Streaming API (Client gets respective response for each request, and final result)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<CloudManagment.RemoveRequest> remove(
@@ -159,6 +165,9 @@ public final class CloudServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static final class CloudServiceStub extends io.grpc.stub.AbstractStub<CloudServiceStub> {
     private CloudServiceStub(io.grpc.Channel channel) {
@@ -189,7 +198,7 @@ public final class CloudServiceGrpc {
 
     /**
      * <pre>
-     *Bidirectional Streaming API
+     *Bidirectional Streaming API (Client gets respective response for each request, and final result)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<CloudManagment.RemoveRequest> remove(
@@ -200,6 +209,9 @@ public final class CloudServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static final class CloudServiceBlockingStub extends io.grpc.stub.AbstractStub<CloudServiceBlockingStub> {
     private CloudServiceBlockingStub(io.grpc.Channel channel) {
@@ -219,6 +231,9 @@ public final class CloudServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static final class CloudServiceFutureStub extends io.grpc.stub.AbstractStub<CloudServiceFutureStub> {
     private CloudServiceFutureStub(io.grpc.Channel channel) {

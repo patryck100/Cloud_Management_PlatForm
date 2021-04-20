@@ -4,6 +4,10 @@
 package CloudManagment;
 
 /**
+ * <pre>
+ *response message for both add and remove methods
+ * </pre>
+ *
  * Protobuf type {@code CloudManagment.ResponseMessage}
  */
 public  final class ResponseMessage extends
@@ -271,6 +275,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *response message for both add and remove methods
+   * </pre>
+   *
    * Protobuf type {@code CloudManagment.ResponseMessage}
    */
   public static final class Builder extends

@@ -11,11 +11,12 @@ public class TestMethods  {
 //		client.loginChannel();
 //		client.login("Patryck", "test");
 		
-		client.capacityChannel();
-		client.print();
+//		client.capacityChannel();
+//		client.print();
 		
 		client.cloudChannel();
-		client.InsertData(1);
+//		client.InsertData(2);
+		client.removeData(2);
 
 	}
 	

@@ -42,13 +42,14 @@ public final class CloudManagmentImpl {
       "est\022\r\n\005empNo\030\001 \001(\t\022\023\n\013dateOfBirth\030\002 \001(\t\022" +
       "\021\n\tfirstName\030\003 \001(\t\022\020\n\010lastName\030\004 \001(\t\022\016\n\006" +
       "gender\030\005 \001(\t\022\020\n\010hireDate\030\006 \001(\t\"#\n\017Respon" +
-      "seMessage\022\020\n\010response\030\001 \001(\t\"\036\n\rRemoveReq" +
-      "uest\022\r\n\005empNo\030\001 \001(\0052\246\001\n\014CloudService\022F\n\003" +
-      "add\022\032.CloudManagment.AddRequest\032\037.CloudM" +
-      "anagment.ResponseMessage\"\000(\001\022N\n\006remove\022\035" +
-      ".CloudManagment.RemoveRequest\032\037.CloudMan" +
-      "agment.ResponseMessage\"\000(\0010\001B&\n\016CloudMan" +
-      "agmentB\022CloudManagmentImplP\001b\006proto3"
+      "seMessage\022\020\n\010response\030\001 \001(\t\"1\n\rRemoveReq" +
+      "uest\022\r\n\005empNo\030\001 \001(\t\022\021\n\tfirstName\030\002 \001(\t2\246" +
+      "\001\n\014CloudService\022F\n\003add\022\032.CloudManagment." +
+      "AddRequest\032\037.CloudManagment.ResponseMess" +
+      "age\"\000(\001\022N\n\006remove\022\035.CloudManagment.Remov" +
+      "eRequest\032\037.CloudManagment.ResponseMessag" +
+      "e\"\000(\0010\001B&\n\016CloudManagmentB\022CloudManagmen" +
+      "tImplP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -79,7 +80,7 @@ public final class CloudManagmentImpl {
     internal_static_CloudManagment_RemoveRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CloudManagment_RemoveRequest_descriptor,
-        new java.lang.String[] { "EmpNo", });
+        new java.lang.String[] { "EmpNo", "FirstName", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

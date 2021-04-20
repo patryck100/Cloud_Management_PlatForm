@@ -4,6 +4,10 @@
 package CloudManagment;
 
 /**
+ * <pre>
+ *message request for remove method
+ * </pre>
+ *
  * Protobuf type {@code CloudManagment.RemoveRequest}
  */
 public  final class RemoveRequest extends
@@ -16,7 +20,8 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private RemoveRequest() {
-    empNo_ = 0;
+    empNo_ = "";
+    firstName_ = "";
   }
 
   @java.lang.Override
@@ -43,9 +48,16 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
+          case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-            empNo_ = input.readInt32();
+            empNo_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            firstName_ = s;
             break;
           }
           default: {
@@ -81,12 +93,71 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int EMPNO_FIELD_NUMBER = 1;
-  private int empNo_;
+  private volatile java.lang.Object empNo_;
   /**
-   * <code>int32 empNo = 1;</code>
+   * <code>string empNo = 1;</code>
    */
-  public int getEmpNo() {
-    return empNo_;
+  public java.lang.String getEmpNo() {
+    java.lang.Object ref = empNo_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      empNo_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string empNo = 1;</code>
+   */
+  public com.google.protobuf.ByteString
+      getEmpNoBytes() {
+    java.lang.Object ref = empNo_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      empNo_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int FIRSTNAME_FIELD_NUMBER = 2;
+  private volatile java.lang.Object firstName_;
+  /**
+   * <code>string firstName = 2;</code>
+   */
+  public java.lang.String getFirstName() {
+    java.lang.Object ref = firstName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      firstName_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string firstName = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getFirstNameBytes() {
+    java.lang.Object ref = firstName_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      firstName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -103,8 +174,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (empNo_ != 0) {
-      output.writeInt32(1, empNo_);
+    if (!getEmpNoBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, empNo_);
+    }
+    if (!getFirstNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, firstName_);
     }
     unknownFields.writeTo(output);
   }
@@ -115,9 +189,11 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (empNo_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, empNo_);
+    if (!getEmpNoBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, empNo_);
+    }
+    if (!getFirstNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, firstName_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -135,8 +211,10 @@ private static final long serialVersionUID = 0L;
     CloudManagment.RemoveRequest other = (CloudManagment.RemoveRequest) obj;
 
     boolean result = true;
-    result = result && (getEmpNo()
-        == other.getEmpNo());
+    result = result && getEmpNo()
+        .equals(other.getEmpNo());
+    result = result && getFirstName()
+        .equals(other.getFirstName());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -149,7 +227,9 @@ private static final long serialVersionUID = 0L;
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + EMPNO_FIELD_NUMBER;
-    hash = (53 * hash) + getEmpNo();
+    hash = (53 * hash) + getEmpNo().hashCode();
+    hash = (37 * hash) + FIRSTNAME_FIELD_NUMBER;
+    hash = (53 * hash) + getFirstName().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -246,6 +326,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *message request for remove method
+   * </pre>
+   *
    * Protobuf type {@code CloudManagment.RemoveRequest}
    */
   public static final class Builder extends
@@ -283,7 +367,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      empNo_ = 0;
+      empNo_ = "";
+
+      firstName_ = "";
 
       return this;
     }
@@ -312,6 +398,7 @@ private static final long serialVersionUID = 0L;
     public CloudManagment.RemoveRequest buildPartial() {
       CloudManagment.RemoveRequest result = new CloudManagment.RemoveRequest(this);
       result.empNo_ = empNo_;
+      result.firstName_ = firstName_;
       onBuilt();
       return result;
     }
@@ -360,8 +447,13 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(CloudManagment.RemoveRequest other) {
       if (other == CloudManagment.RemoveRequest.getDefaultInstance()) return this;
-      if (other.getEmpNo() != 0) {
-        setEmpNo(other.getEmpNo());
+      if (!other.getEmpNo().isEmpty()) {
+        empNo_ = other.empNo_;
+        onChanged();
+      }
+      if (!other.getFirstName().isEmpty()) {
+        firstName_ = other.firstName_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -392,28 +484,140 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int empNo_ ;
+    private java.lang.Object empNo_ = "";
     /**
-     * <code>int32 empNo = 1;</code>
+     * <code>string empNo = 1;</code>
      */
-    public int getEmpNo() {
-      return empNo_;
+    public java.lang.String getEmpNo() {
+      java.lang.Object ref = empNo_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        empNo_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>int32 empNo = 1;</code>
+     * <code>string empNo = 1;</code>
      */
-    public Builder setEmpNo(int value) {
-      
+    public com.google.protobuf.ByteString
+        getEmpNoBytes() {
+      java.lang.Object ref = empNo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        empNo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string empNo = 1;</code>
+     */
+    public Builder setEmpNo(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
       empNo_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 empNo = 1;</code>
+     * <code>string empNo = 1;</code>
      */
     public Builder clearEmpNo() {
       
-      empNo_ = 0;
+      empNo_ = getDefaultInstance().getEmpNo();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string empNo = 1;</code>
+     */
+    public Builder setEmpNoBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      empNo_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object firstName_ = "";
+    /**
+     * <code>string firstName = 2;</code>
+     */
+    public java.lang.String getFirstName() {
+      java.lang.Object ref = firstName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        firstName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string firstName = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFirstNameBytes() {
+      java.lang.Object ref = firstName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        firstName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string firstName = 2;</code>
+     */
+    public Builder setFirstName(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      firstName_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string firstName = 2;</code>
+     */
+    public Builder clearFirstName() {
+      
+      firstName_ = getDefaultInstance().getFirstName();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string firstName = 2;</code>
+     */
+    public Builder setFirstNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      firstName_ = value;
       onChanged();
       return this;
     }

@@ -8,7 +8,22 @@ public interface RemoveRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int32 empNo = 1;</code>
+   * <code>string empNo = 1;</code>
    */
-  int getEmpNo();
+  java.lang.String getEmpNo();
+  /**
+   * <code>string empNo = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getEmpNoBytes();
+
+  /**
+   * <code>string firstName = 2;</code>
+   */
+  java.lang.String getFirstName();
+  /**
+   * <code>string firstName = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getFirstNameBytes();
 }

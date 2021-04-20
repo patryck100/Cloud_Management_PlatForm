@@ -7,7 +7,7 @@ import java.util.Properties;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
-import services_Implementation.CapacityService;
+import services_Implementation.printService;
 import services_Implementation.CloudService;
 import services_Implementation.LoginService;
 
@@ -60,7 +60,7 @@ public class registerServices {
 		//Creates an instance of each service
 		LoginService loginService = new LoginService();
 		CloudService cloudService = new CloudService();
-		CapacityService capacityService = new CapacityService();
+		printService capacityService = new printService();
 		
 		//Call the function "getProperties" inside each of the services
 		//Register each service individually

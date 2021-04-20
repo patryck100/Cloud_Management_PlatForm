@@ -1,6 +1,7 @@
 package services_Implementation;
 
-import capacity_print.capacityServiceGrpc.capacityServiceImplBase;
+
+import print.printServiceGrpc.printServiceImplBase;
 import io.grpc.stub.StreamObserver;
 import services_Implementation.CloudService;
 import services_Implementation.CloudService.Employee;
@@ -11,9 +12,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import capacity_print.*;
+import print.*;
 
-public class CapacityService extends capacityServiceImplBase {
+public class printService extends printServiceImplBase {
 
 /* ----------------------- Still needs to create the record with add, remove or alter data before being able to print it -------------*/	
 	//Server Streaming API. Prints all record into cloud + storage. 
@@ -79,21 +80,7 @@ public class CapacityService extends capacityServiceImplBase {
 		}
 		
 	
-	
-	//First idea being Unary but considering to make it Client streaming. Client could send many request and receive only one response
-	@Override
-	public void storage(storageRequest request, StreamObserver<storageResponse> responseObserver) {
-		int choose = request.getStorageValue();
-		
-		
-		
-		storageResponse response = storageResponse.newBuilder().setNewStorage("Your new Storage size is: " + choose).build();
-		
-		responseObserver.onNext(response);
-		responseObserver.onCompleted();
-		
-		
-	}
+
 	
 	private String readFile() throws FileNotFoundException {
 		

@@ -4,6 +4,10 @@
 package CloudManagment;
 
 /**
+ * <pre>
+ *message request for add method
+ * </pre>
+ *
  * Protobuf type {@code CloudManagment.AddRequest}
  */
 public  final class AddRequest extends
@@ -526,6 +530,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *message request for add method
+   * </pre>
+   *
    * Protobuf type {@code CloudManagment.AddRequest}
    */
   public static final class Builder extends
