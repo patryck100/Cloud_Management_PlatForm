@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import client.ClientCMP;
+import loginCMP.LoginResponse;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -16,11 +17,12 @@ import java.awt.Cursor;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
-public class Cloud_Managment_Platform_app {
+public class Main_Cloud_Managment_Platform_GUI {
 
 	private JFrame frame;
 	private JTextField LoginText;
 	private JPasswordField passwordField;
+	private ClientCMP client = new ClientCMP();
 
 	/**
 	 * Launch the application.
@@ -33,7 +35,7 @@ public class Cloud_Managment_Platform_app {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Cloud_Managment_Platform_app window = new Cloud_Managment_Platform_app();
+					Main_Cloud_Managment_Platform_GUI window = new Main_Cloud_Managment_Platform_GUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +47,17 @@ public class Cloud_Managment_Platform_app {
 	/**
 	 * Create the application.
 	 */
-	public Cloud_Managment_Platform_app() {
+	public Main_Cloud_Managment_Platform_GUI() {
+		
+		System.out.println("Discovering services, please wait...");
+		
+		//Makes a connection to the Login Channel
+		client.run();
+		client.loginChannel();
+		client.printChannel();
+		client.cloudChannel();
+			
+		
 		initialize();
 	}
 
@@ -56,7 +68,7 @@ public class Cloud_Managment_Platform_app {
 		frame = new JFrame();
 		frame.getContentPane().setForeground(Color.WHITE);
 		frame.setBackground(new Color(0, 0, 51));
-		frame.getContentPane().setBackground(new Color(51, 102, 204));
+		frame.getContentPane().setBackground(new Color(25, 25, 112));
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -64,15 +76,23 @@ public class Cloud_Managment_Platform_app {
 		//----------------------------- Login button ----------------------------
 		JButton LoginButton = new JButton("Login");
 		LoginButton.setBackground(Color.LIGHT_GRAY);
-		LoginButton.setForeground(Color.BLACK);
+		LoginButton.setForeground(new Color(144, 238, 144));
 		LoginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); //when hover the "Login" button, it changes the cursor to a hand cursor
 		
 		//When clicked on the "Login" button...
 		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			ClientCMP startLogin = new ClientCMP();
-			startLogin.login(LoginText.getText(), passwordField.getPassword().toString());
-			JOptionPane.showMessageDialog(LoginButton, "Hello");
+				LoginResponse response = client.login(LoginText.getText(), String.valueOf(passwordField.getPassword()));
+				JOptionPane.showMessageDialog(LoginButton, response.getResponseMessage());
+
+				if (response.getResponseCode() == 1) {
+					Cloud_Managment_Platform_GUI nextGUI = new Cloud_Managment_Platform_GUI();
+					nextGUI.setVisible(true);
+					nextGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			        frame.dispose();
+					
+					
+				}
 			}
 		});
 		
@@ -86,6 +106,7 @@ public class Cloud_Managment_Platform_app {
 		frame.getContentPane().add(lblNewLabel);
 		
 		LoginText = new JTextField();
+		LoginText.setBackground(new Color(248, 248, 255));
 		LoginText.setBounds(172, 79, 130, 26);
 		frame.getContentPane().add(LoginText);
 		LoginText.setColumns(10);
@@ -109,12 +130,13 @@ public class Cloud_Managment_Platform_app {
 		
 		
 		ClearButton.setBackground(Color.LIGHT_GRAY);
-		ClearButton.setForeground(Color.BLACK);
+		ClearButton.setForeground(new Color(244, 164, 96));
 		ClearButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		ClearButton.setBounds(221, 161, 81, 29);
 		frame.getContentPane().add(ClearButton);
 		
 		passwordField = new JPasswordField();
+		passwordField.setBackground(new Color(248, 248, 255));
 		passwordField.setBounds(172, 111, 130, 26);
 		frame.getContentPane().add(passwordField);
 	}

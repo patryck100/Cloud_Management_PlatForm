@@ -106,7 +106,7 @@ public class printService extends printServiceImplBase {
 
 		Properties prop = null;
 
-		try (InputStream input = new FileInputStream("src/main/resources/capacity.properties")) {
+		try (InputStream input = new FileInputStream("src/main/resources/print.properties")) {
 
 			prop = new Properties();
 

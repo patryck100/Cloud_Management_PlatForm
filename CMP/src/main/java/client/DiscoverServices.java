@@ -76,8 +76,8 @@ public class DiscoverServices {
 //    	    String cloud_service_type = "_cloud._tcp.local.";
 //    		ds.discoverService(cloud_service_type);
     		
-    		String capacity_service_type = "_capacity._tcp.local.";
-    		ds.discoverService(capacity_service_type);
+    		String print_service_type = "_print._tcp.local.";
+    		ds.discoverService(print_service_type);
     		
 
             // Wait a bit

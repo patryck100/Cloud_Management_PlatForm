@@ -26,14 +26,14 @@ public class ServerCMP implements Runnable{
 		//creates an object of each service class
 		LoginService loginService = new LoginService();
 		CloudService cloudService = new CloudService();
-		printService capacityService = new printService();
+		printService printService = new printService();
 		
 		//Instance of the register services class, so then the services are registered automatically before the server starts
 		registerServices register = new registerServices();
 		
 		//register all services
 		System.out.println("Registering services, please wait until server get started...\n");
-//		register.main(null);
+		register.main(null);
 		
 		
 	    int port1 = 50051;
@@ -55,7 +55,7 @@ public class ServerCMP implements Runnable{
 			    .start();
 			
 			server2 = ServerBuilder.forPort(port2)
-					.addService(capacityService)
+					.addService(printService)
 				    .build()
 				    .start();
 			

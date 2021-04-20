@@ -81,7 +81,7 @@ public class ClientCMP {
 	
 	// jmdns - service info for each channel
 	private static ServiceInfo serviceInfo_LoginChannel = null;
-	private static ServiceInfo serviceInfo_CapacityChannel = null;
+	private static ServiceInfo serviceInfo_PrintChannel = null;
 	private static ServiceInfo serviceInfo_CloudChannel = null;
 	
 	public ServiceInfo discover(String str) {
@@ -121,7 +121,7 @@ public class ClientCMP {
 	/*------------------------ Creating a variable Blocking Stub or Async Stub for each specific client channel ----------------*/
 	private static LoginServiceGrpc.LoginServiceBlockingStub LoginClient;
 	private static CloudServiceGrpc.CloudServiceStub CloudClient;
-	private static printServiceGrpc.printServiceBlockingStub CapacityClient;
+	private static printServiceGrpc.printServiceBlockingStub PrintClient;
 	
 	
 	/* --------------------------- Initializing a channel for each service --------------------------*/
@@ -137,7 +137,7 @@ public class ClientCMP {
 	    serviceInfo_LoginChannel = discover(login_service_type);
 	    
 	    /*----- Gets the local host and port number to be set on the channel -------*/
-//	    String host = serviceInfo.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
+//	    String host = serviceInfo_LoginChannel.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
         int port = serviceInfo_LoginChannel.getPort();
 		
 		System.out.println("Starting login channel...");
@@ -152,24 +152,24 @@ public class ClientCMP {
 	}
 	
 	//This channel gives access to the print and change storage services
-	public void capacityChannel() {
+	public void printChannel() {
 
 		// discover the service
-		String capacity_service_type = "_capacity._tcp.local.";
-		serviceInfo_CapacityChannel = discover(capacity_service_type);
+		String print_service_type = "_print._tcp.local.";
+		serviceInfo_PrintChannel = discover(print_service_type);
 		
 		/*----- Gets the local host and port number to be set on the channel -------*/
-//		String host = serviceInfo3.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
-		int port = serviceInfo_CapacityChannel.getPort(); 
+//		String host = serviceInfo_PrintChannel.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
+		int port = serviceInfo_PrintChannel.getPort(); 
 
-		System.out.println("Starting Capacity channel...");
+		System.out.println("Starting Printing channel...");
 	
 	
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
 				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 				.build();
 
-		CapacityClient = printServiceGrpc.newBlockingStub(channel);
+		PrintClient = printServiceGrpc.newBlockingStub(channel);
 
 	}
 	
@@ -180,10 +180,10 @@ public class ClientCMP {
 		serviceInfo_CloudChannel = discover(cloud_service_type);
 		
 		/*----- Gets the local host and port number to be set on the channel -------*/
-//		String host = serviceInfo2.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
+//		String host = serviceInfo_CloudChannel.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
 		int port = serviceInfo_CloudChannel.getPort();
 
-		System.out.println("Starting login channel...");
+		System.out.println("Starting Cloud channel...");
 		
 		
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
@@ -200,16 +200,16 @@ public class ClientCMP {
 //		String login_service_type = "_loginCMP._tcp.local.";
 //	    serviceInfo_LoginChannel = discover(login_service_type);
 //	    
-//	    String capacity_service_type = "_capacity._tcp.local.";
-//	    serviceInfo_CapacityChannel = discover(capacity_service_type);
+//	    String capacity_service_type = "_print._tcp.local.";
+//	    serviceInfo_PrintChannel = discover(print_service_type);
 //	    
 //	    String cloud_service_type = "_cloud._tcp.local.";
 //	    serviceInfo_CloudChannel = discover(cloud_service_type);
 		
 //	    String host_Login = ""+serviceInfo_LoginChannel.getHostAddresses()[0];
 		//int port_Login = serviceInfo_LoginChannel.getPort();
-//	    String host_Capacity = ""+serviceInfo_CapacityChannel.getHostAddresses()[0];
-		//int port_Capacity = serviceInfo_CapacityChannel.getPort();
+//	    String host_Print = ""+serviceInfo_PrintChannel.getHostAddresses()[0];
+		//int port_Printrint = serviceInfo_PrintChannel.getPort();
 //	    String host_Cloud = ""+serviceInfo_CloudChannel.getHostAddresses()[0];
 		//int port_Cloud = serviceInfo_CloudChannel.getPort();
 	    
@@ -220,7 +220,7 @@ public class ClientCMP {
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
 		
-		ManagedChannel capacity_Channel = ManagedChannelBuilder.forAddress("localhost", 50050)
+		ManagedChannel print_Channel = ManagedChannelBuilder.forAddress("localhost", 50050)
 				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 				.build();
 		
@@ -230,14 +230,14 @@ public class ClientCMP {
 
 		LoginClient = LoginServiceGrpc.newBlockingStub(login_Channel);
 		CloudClient = CloudServiceGrpc.newStub(cloud_Channel);
-		CapacityClient = printServiceGrpc.newBlockingStub(capacity_Channel);
+		PrintClient = printServiceGrpc.newBlockingStub(print_Channel);
 		
 //		login("Patryck", "test");
 //		print();
 //		removeData(2);
 		
 //		login_Channel.shutdown();
-//		capacity_Channel.shutdown();
+//		print_Channel.shutdown();
 //		cloud_Channel.shutdown();
 		
 		
@@ -252,12 +252,14 @@ public class ClientCMP {
 	
 	//Unary API
 	//Passes as parameters an userName and password which will be validated against a database into the server
-	public static void login(String userName, String password) {
+	public static LoginResponse login(String userName, String password) {
 		LoginRequest request = LoginRequest.newBuilder().setUsername(userName).setPassword(password).build();
 		
 		LoginResponse response = LoginClient.login(request);
+
 		
 		System.out.println(response.getResponseMessage());
+		return response;
 		
 	} //end of login function
 	
@@ -366,13 +368,14 @@ public class ClientCMP {
 	} //end of "instertData" function
 	
 	
+	
 	// Server Streaming, the client makes one request and the server sends many responses.
 	public static void print() {
 		// Client request
 		printRequest print = printRequest.newBuilder().setPrint(true).build();
 
 		try {
-			Iterator<printResponse> responces = CapacityClient.print(print);
+			Iterator<printResponse> responces = PrintClient.print(print);
 
 			// This loop will print each of the responses while the server is still sending
 			// it
