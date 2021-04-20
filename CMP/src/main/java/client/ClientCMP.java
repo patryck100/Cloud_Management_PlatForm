@@ -365,103 +365,97 @@ public class ClientCMP {
 		
 	} //end of "instertData" function
 	
-	//Server Streaming, the client makes one request and the server sends many responses.
+	
+	// Server Streaming, the client makes one request and the server sends many responses.
 	public static void print() {
 		// Client request
 		printRequest print = printRequest.newBuilder().setPrint(true).build();
-		
 
 		try {
 			Iterator<printResponse> responces = CapacityClient.print(print);
-			
-			//This loop will print each of the responses while the server is still sending it 
-			while(responces.hasNext()) {
+
+			// This loop will print each of the responses while the server is still sending
+			// it
+			while (responces.hasNext()) {
 				printResponse temp = responces.next();
-				System.out.println(temp.getPrinting());	
-				
-			} //end of while loop
+				System.out.println(temp.getPrinting());
+
+			} // end of while loop
 
 		} catch (StatusRuntimeException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}// end of Print function
 	
-	//Bi Directional Streaming API.
+	
+	// Bi Directional Streaming API.
 	public static void removeData(int numberData) {
-		
-		//Blocks the channel and waits for the response from the server when client send "onComplete"  
-				CountDownLatch latch = new CountDownLatch(1);
-				
-				StreamObserver<RemoveRequest> requestObserver = CloudClient.remove( new StreamObserver <ResponseMessage>(){
 
-					@Override
-					public void onNext(ResponseMessage value) {
-						// TODO Auto-generated method stub
-						System.out.println(value.getResponse());
-					}
+		// Blocks the channel and waits for the response from the server when client
+		// send "onComplete"
+		CountDownLatch latch = new CountDownLatch(1);
 
-					@Override
-					public void onError(Throwable t) {
-						t.printStackTrace();
-						
-					}
+		StreamObserver<RemoveRequest> requestObserver = CloudClient.remove(new StreamObserver<ResponseMessage>() {
 
-					@Override
-					public void onCompleted() {
-						// the server is done sending us data
-						// onCompleted will be called right after onNext();
-						System.out.println("Server has completed sending messages");
-						
-						//Client finished sending requests, so it count down waiting for the server's response
-						latch.countDown();
-					}
+			@Override
+			public void onNext(ResponseMessage value) {
+				// TODO Auto-generated method stub
+				System.out.println(value.getResponse());
+			}
 
-					
-					
-				}); //end of "requestObserver"
-				
-				RemoveRequest request;
-				Scanner sc = new Scanner(System.in);
-				String empNumber = "";
-				String firstName = "";
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
 
-				
-				//This will set each field individually by prompting to the client
-				for (int i = 0; i< numberData; i++) {
-				System.out.println("Please enter the Employee number: ");
-				empNumber = sc.nextLine();
-				
-				System.out.println("Please enter First Name of the Employee (Only letters): ");
-				firstName = sc.nextLine();
-				
+			}
 
-				
-				//Set values to the the request
-				request = RemoveRequest.newBuilder().setEmpNo(empNumber)
-						.setFirstName(firstName)
-						.build();
-				
-				//Send each request one by one
-				requestObserver.onNext(request);
-				
-				}// end of for loop
-				
-				//Tell the server that the client has completed sending requests
-				requestObserver.onCompleted();
-				
-					
-				
-				
-				//This is used to wait for the server's response. Otherwise the channel closes and there is no time to get response
-				try {
-					latch.await(3L, TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		
+			@Override
+			public void onCompleted() {
+				// the server is done sending us data
+				// onCompleted will be called right after onNext();
+				System.out.println("Server has completed sending messages");
+
+				// Client finished sending requests, so it count down waiting for the server's
+				// response
+				latch.countDown();
+			}
+
+		}); // end of "requestObserver"
+
+		RemoveRequest request;
+		Scanner sc = new Scanner(System.in);
+		String empNumber = "";
+		String firstName = "";
+
+		// This will set each field individually by prompting to the client
+		for (int i = 0; i < numberData; i++) {
+			System.out.println("Please enter the Employee number: ");
+			empNumber = sc.nextLine();
+
+			System.out.println("Please enter First Name of the Employee (Only letters): ");
+			firstName = sc.nextLine();
+
+			// Set values to the the request
+			request = RemoveRequest.newBuilder().setEmpNo(empNumber).setFirstName(firstName).build();
+
+			// Send each request one by one
+			requestObserver.onNext(request);
+
+		} // end of for loop
+
+		// Tell the server that the client has completed sending requests
+		requestObserver.onCompleted();
+
+		// This is used to wait for the server's response. Otherwise the channel closes
+		// and there is no time to get response
+		try {
+			latch.await(3L, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 
