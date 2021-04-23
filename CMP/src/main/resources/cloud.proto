@@ -18,7 +18,7 @@ service CloudService{ //name of the service
 
 //message request for add method
 message AddRequest{
-	string empNo = 1;
+	int32 empNo = 1;
 	string dateOfBirth = 2;
 	string firstName = 3;
 	string lastName = 4;
@@ -33,7 +33,7 @@ message ResponseMessage {
 
 //message request for remove method
 message RemoveRequest {
-	string empNo = 1;
+	int32 empNo = 1;
 	string firstName = 2;
 }
 

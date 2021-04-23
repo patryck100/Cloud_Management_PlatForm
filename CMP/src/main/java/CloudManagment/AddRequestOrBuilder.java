@@ -8,14 +8,9 @@ public interface AddRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string empNo = 1;</code>
+   * <code>int32 empNo = 1;</code>
    */
-  java.lang.String getEmpNo();
-  /**
-   * <code>string empNo = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getEmpNoBytes();
+  int getEmpNo();
 
   /**
    * <code>string dateOfBirth = 2;</code>
