@@ -26,7 +26,8 @@ import server.ServerCMP;
 
 public class ClientCMP {
 	
-
+		/*-----------------------------------------------------------------------------------------------------------------*/
+		/*-------------- BEFORE STARTING THE CLIENT, PLEASE MAKE SURE THE SERVER IS RUNNING IN THE BACKGROUND -------------*/
 
 	public static void main(String[] args) {
 
@@ -48,10 +49,10 @@ public class ClientCMP {
 		//REQUIRES A CONNECTION TO THE LOGIN CANNEL
 		
 		//Username: Patryck	Password: test
-		//login("Patryck", "test"); 
+		login("Patryck", "test"); 
 		
 		// for logout it only needs to repeat the username, in this case: Patryck
-		//logout("Patryck"); 
+		logout("Patryck"); 
 		
 		/*-------------------- PRINTING SERVICE (SERVER STREAMING API) ------------------*/
 		
@@ -71,7 +72,7 @@ public class ClientCMP {
 		*-> Employee also need to be older than 18 compared to the Hire Date
 		*-> Employee's name only accepts letters*/
 		
-//		InsertData(2); // Call the function with the number of employees to be ADDED. The questions will be prompt to the user
+		InsertData(2); // Call the function with the number of employees to be ADDED. The questions will be prompt to the user
 		
 		
 		/*The remove method takes as parameter the number of employees to be removed.
@@ -79,7 +80,7 @@ public class ClientCMP {
 		 *algorithm to search for the employee. If found it will be removed, otherwise 
 		 *a message "not found" will be prompt */
 		
-//		removeData(1); // Call the function with the number of employees to be REMOVED. The questions will be prompt to the user
+		removeData(1); // Call the function with the number of employees to be REMOVED. The questions will be prompt to the user
 
 				
 		
