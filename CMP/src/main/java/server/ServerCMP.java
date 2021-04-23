@@ -8,10 +8,62 @@ import io.grpc.ServerBuilder;
 import services_Implementation.*;
 
 public class ServerCMP implements Runnable{
+	
+	//creates an object of each service class
+	private static LoginService loginService = new LoginService();
+	private static CloudService cloudService = new CloudService();
+	private static printService printService = new printService();
 
 	public static void main(String[] args) {
-		// Thread of the server
-		Thread server = new Thread(new ServerCMP()); 
+		
+		
+		// Thread of the Server CMP class
+		Thread server = new Thread(new ServerCMP());
+		
+		//Instance of the register services class, so then the services are registered automatically before the server starts
+		registerServices register = new registerServices();
+		
+		
+		//register all services
+		System.out.println("Registering services, please wait until server get started...\n");
+		
+		/*Decided to use thread to register each service because it is around 3 times faster than registering all together in a same function*/
+		Thread t1 = new Thread()
+		{
+		    public void run() {
+		    	register.registerService(loginService.getProperties());
+		    }
+		};
+		
+		
+		
+		Thread t2 = new Thread()
+		{
+		    public void run() {
+		    	register.registerService(cloudService.getProperties());
+		    }
+		};
+		
+		
+		Thread t3 = new Thread()
+		{
+		    public void run() {
+		    	register.registerService(printService.getProperties());
+		    }
+		}; 
+				
+		t1.start();
+		t2.start();
+		t3.start();
+		
+		try { //wait until all threads are done
+			
+			t1.join();
+			t2.join();
+			t3.join();
+		} catch(Exception e) {
+			
+		}
 		
 		//starts whatever has in the "run()" function, in this case, the server
 		server.start();
@@ -23,18 +75,17 @@ public class ServerCMP implements Runnable{
 
 	@Override
 	public void run() {
-		//creates an object of each service class
-		LoginService loginService = new LoginService();
-		CloudService cloudService = new CloudService();
-		printService printService = new printService();
+		
 		
 		//Instance of the register services class, so then the services are registered automatically before the server starts
-		registerServices register = new registerServices();
+		//registerServices register = new registerServices();
 		
-		//register all services
-		System.out.println("Registering services, please wait until server get started...\n");
-		register.main(null);
+//		//register all services
+//		System.out.println("Registering services, please wait until server get started...\n");
 		
+		//It takes arond 25.75seconds to register the 3 services and run the server. Using thread is more efficient
+		//register.main(null);
+			
 		
 	    int port1 = 50051;
 	    int port2 = 50050;

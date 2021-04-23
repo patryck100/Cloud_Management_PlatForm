@@ -13,7 +13,7 @@ import services_Implementation.LoginService;
 
 public class registerServices {
 
-	private void registerService(Properties prop) {
+	public void registerService(Properties prop) {
 
 		try {
 			// Create a JmDNS instance
@@ -54,19 +54,25 @@ public class registerServices {
 	}
 	
 	public static void main (String [] args) {
+		
 		//Creates an instance of the Register services class
 		registerServices register = new registerServices();
 		
 		//Creates an instance of each service
 		LoginService loginService = new LoginService();
 		CloudService cloudService = new CloudService();
-		printService capacityService = new printService();
+		printService printService = new printService();
 		
 		//Call the function "getProperties" inside each of the services
 		//Register each service individually
 		register.registerService(loginService.getProperties());
+
 		register.registerService(cloudService.getProperties());
-		register.registerService(capacityService.getProperties());
+		
+		register.registerService(printService.getProperties());
+
+		
 	}
+
 
 }
