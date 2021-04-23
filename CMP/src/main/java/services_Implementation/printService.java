@@ -3,9 +3,6 @@ package services_Implementation;
 
 import print.printServiceGrpc.printServiceImplBase;
 import io.grpc.stub.StreamObserver;
-import services_Implementation.CloudService;
-import services_Implementation.CloudService.Employee;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,25 +13,25 @@ import print.*;
 
 public class printService extends printServiceImplBase {
 
-/* ----------------------- Still needs to create the record with add, remove or alter data before being able to print it -------------*/	
-	//Server Streaming API. Prints all record into cloud + storage. 
+	
+	//Server Streaming API. Prints all record from the cloud + size of database. 
 	@Override
 	public void print(printRequest request, StreamObserver<printResponse> responseObserver) {
 		
-		boolean print = request.getPrint();
+		boolean print = request.getPrint(); //set to true when the client request "print"
 		Scanner sc;
-		int counter = 0; // variable i will be used to track the lines from the csv file and check how many data we have
+		int counter = 0; // variable counter will be used to track the lines from the csv file and check how many data we have
 		String st;
 	
 	try {
-		sc = new Scanner(new FileReader("employees_data.csv"));
+		sc = new Scanner(new FileReader("employees_data.csv")); //path to the Employees record generated
 
 		
 		//when a print is requested, "print" is set to true and a loop which goes through the entire list in the cloud
 		//returns each record individually with a pause of a second
 		if(print) {
 						
-			 if(sc.hasNextLine()) { //if file is not empty
+			 if(sc.hasNextLine()) { //if file has any data (represented by rows/lines)
 						
 				//Starting with the header
 				responseObserver.onNext(printResponse.newBuilder()
@@ -45,22 +42,23 @@ public class printService extends printServiceImplBase {
 				
 				
 				// goes through the entire list in the cloud
-				while (sc.hasNextLine())  //if it has one more line in the csv file, it keeps running
+				while (sc.hasNextLine())  //if it has one or more line in the csv file, it keeps running
 				{
 					st = sc.nextLine(); //set value of "st" to next line
-					String[] data = st.split(",");
+					String[] data = st.split(","); //creates a String array separating the columns from the CSV file
 					//this will generate a response for each data in the cloud
 					printResponse response = printResponse.newBuilder()
 							.setPrinting("["+data[0] + ", " + data[1] + ", " + data[2] + ", " + data[3] + ", " + data[4] + ", " + data[5]+"]")
 							.build(); 
-					responseObserver.onNext(response); //send response to client
+					responseObserver.onNext(response); //send response to the client
 					
-					counter++; //keeps track of how many data is in the csv file
+					counter++; //keeps track of how many data is in the database ( represented by the CSV Employees file)
 					
 					Thread.sleep(1000L); //sleeps before each response
 				}
 				sc.close();  //closes the scanner
-			 } else {
+				
+			 } else { //If file has no data, inform the Client that the cloud is empty, and completes print request
 				 responseObserver.onNext(printResponse.newBuilder()
 							.setPrinting("Your cloud is empty!").build());
 				responseObserver.onCompleted(); //close response when it finishes
@@ -70,38 +68,19 @@ public class printService extends printServiceImplBase {
 				
 			}
 		}catch (InterruptedException | FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} //put the thread to sleep for 1 second. It needs try and catch
+			} 
+			//At the end when it finishes sending responses, it sends a final message with the amount of Employee
+			//records and close the streaming with "onComplete".
 			responseObserver.onNext(printResponse.newBuilder()
 					.setPrinting("Your cloud has " + counter + " records.\nEnd of Streaming...").build());
 			responseObserver.onCompleted(); //close response when it finishes
 			
 		}
 		
-	
 
-	
-	private String readFile() throws FileNotFoundException {
-		
-		Scanner sc = new Scanner(new FileReader("employees_data.csv"));
-		String printString = "EmpNo - Date Of Birth - First Name - Last Name - Gender - Hire Date \n";
-//		sc.nextLine();
-
-		int counter = 0; // variable i will be used to track the lines to be copied from the csv file
-		String st;
-		while (sc.hasNextLine())  //returns a boolean value
-		{
-			st = sc.nextLine();
-			String[] data = st.split(",");
-			printString += data[0] + ", " + data[1] + ", " + data[2] + ", " + data[3] + ", " + data[4] + ", " + data[5] + "\n";
-			counter++;
-		}
-		sc.close();  //closes the scanner
-		
-		return printString + "\nWith " + counter + " files";
-		}
-		
+	//Returns the properties for the Print service, stored in the same folder as the proto files.
+	//This function is used by the JMDNS to discover the properties from the service
 	public Properties getProperties() {
 
 		Properties prop = null;

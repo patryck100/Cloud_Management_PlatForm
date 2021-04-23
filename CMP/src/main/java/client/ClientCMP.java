@@ -142,17 +142,17 @@ public class ClientCMP {
 	public void loginChannel() {
 		
 		// discover the service
-	    String login_service_type = "_loginCMP._tcp.local.";
-	    serviceInfo_LoginChannel = discover(login_service_type);
+	    //String login_service_type = "_loginCMP._tcp.local.";
+	    //serviceInfo_LoginChannel = discover(login_service_type);
 	    
 	    /*----- Gets the local host and port number to be set on the channel -------*/
 //	    String host = serviceInfo_LoginChannel.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
-        int port = serviceInfo_LoginChannel.getPort();
+       //int port = serviceInfo_LoginChannel.getPort();
 		
 		System.out.println("Starting login channel...");
 		
 		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051) //  host: "localHost", port: 50051
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
 
@@ -162,19 +162,19 @@ public class ClientCMP {
 	
 	//This channel gives access to the print and change storage services
 	public void printChannel() {
-
+		
+		
 		// discover the service
-		String print_service_type = "_print._tcp.local.";
-		serviceInfo_PrintChannel = discover(print_service_type);
+		//String print_service_type = "_print._tcp.local.";
+		//serviceInfo_PrintChannel = discover(print_service_type);
 		
 		/*----- Gets the local host and port number to be set on the channel -------*/
 //		String host = serviceInfo_PrintChannel.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
-		int port = serviceInfo_PrintChannel.getPort(); 
-
+		//int port = serviceInfo_PrintChannel.getPort(); 	
+	
 		System.out.println("Starting Printing channel...");
-	
-	
-		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
+		
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50050) //  host: "localHost", port: 50050
 				.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 				.build();
 
@@ -185,17 +185,17 @@ public class ClientCMP {
 	public void cloudChannel() {
 
 		// discover the service
-		String cloud_service_type = "_cloud._tcp.local.";
-		serviceInfo_CloudChannel = discover(cloud_service_type);
+		//String cloud_service_type = "_cloud._tcp.local.";
+		//serviceInfo_CloudChannel = discover(cloud_service_type);
 		
 		/*----- Gets the local host and port number to be set on the channel -------*/
 //		String host = serviceInfo_CloudChannel.getHostAddresses()[0]; //on MacBook it returns a hexagonal IP which does not work as local host. But it works on windows
-		int port = serviceInfo_CloudChannel.getPort();
+		//int port = serviceInfo_CloudChannel.getPort();
 
 		System.out.println("Starting Cloud channel...");
 		
 		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port)
+		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50052) //  host: "localHost", port: 50052
 					.usePlaintext() //force SSL to be deactivated during our development. (security measures)
 					.build();
 
