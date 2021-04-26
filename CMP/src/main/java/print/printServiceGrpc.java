@@ -16,6 +16,9 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
+ * <pre>
+ *name of the service
+ * </pre>
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.15.0)",
@@ -83,12 +86,16 @@ public final class printServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static abstract class printServiceImplBase implements io.grpc.BindableService {
 
     /**
      * <pre>
-     *Server streaming API
+     *Server streaming API. Client requests a String representation of the database, server responds with
+     *multiple messages back + size of database
      * </pre>
      */
     public void print(print.printRequest request,
@@ -110,6 +117,9 @@ public final class printServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static final class printServiceStub extends io.grpc.stub.AbstractStub<printServiceStub> {
     private printServiceStub(io.grpc.Channel channel) {
@@ -129,7 +139,8 @@ public final class printServiceGrpc {
 
     /**
      * <pre>
-     *Server streaming API
+     *Server streaming API. Client requests a String representation of the database, server responds with
+     *multiple messages back + size of database
      * </pre>
      */
     public void print(print.printRequest request,
@@ -140,6 +151,9 @@ public final class printServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static final class printServiceBlockingStub extends io.grpc.stub.AbstractStub<printServiceBlockingStub> {
     private printServiceBlockingStub(io.grpc.Channel channel) {
@@ -159,7 +173,8 @@ public final class printServiceGrpc {
 
     /**
      * <pre>
-     *Server streaming API
+     *Server streaming API. Client requests a String representation of the database, server responds with
+     *multiple messages back + size of database
      * </pre>
      */
     public java.util.Iterator<print.printResponse> print(
@@ -170,6 +185,9 @@ public final class printServiceGrpc {
   }
 
   /**
+   * <pre>
+   *name of the service
+   * </pre>
    */
   public static final class printServiceFutureStub extends io.grpc.stub.AbstractStub<printServiceFutureStub> {
     private printServiceFutureStub(io.grpc.Channel channel) {
