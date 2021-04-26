@@ -56,6 +56,7 @@ import javax.swing.event.AncestorEvent;
 
 public class Cloud_Managment_Platform_GUI extends JFrame {
 
+	/*-------- Global variable to be accessed from the class --------*/
 	private JTextField fName_add = null;
 	private JTextField lName = null;
 	private JTextField dateOfBirth;
@@ -69,7 +70,9 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 	//Object of classes
 	private ClientCMP client = new ClientCMP();
 	private Main_Cloud_Managment_Platform_GUI loginGUI = new Main_Cloud_Managment_Platform_GUI();
-	private List <AddRequest> requests = new ArrayList<>();
+	
+	//Having an array of Employee requests allows requesting multiple requests in a Client streaming API.
+	private List <AddRequest> requests = new ArrayList<>(); 
 	
 	
 	/**
@@ -129,24 +132,27 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		lblNewLabel_1_1.setBounds(227, 105, 177, 16);
 		getContentPane().add(lblNewLabel_1_1);
 		
-		/*------------------ ADD new Employee Button, Client Streaming API------------*/
+		/*------------------ "ADD" new Employee Button, Client Streaming API------------*/
 		JButton addButton = new JButton("ADD");
+		
+		//When clicked on the button "ADD"
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// If any of the ADD Employee fields is empty, show message Dialog!
-				if (dateOfBirth.getText().equals(null) || fName_add.getText().equals(null)
-						|| lName.getText().equals(null) || gender.getSelectedItem().toString().equals(null) 
-						|| hireDate.getText().equals(null)) {
+				// Validates if input from "ADD" fields are not empty
+				if (dateOfBirth.getText().equals("") || fName_add.getText().equals("")
+						|| lName.getText().equals("") || gender.getSelectedItem().toString().equals("") 
+						|| hireDate.getText().equals("")) {
 					
 					JOptionPane.showMessageDialog(addButton, "Please, enter all Employee data before sending request");
 					
-				} else {
+				} else { //if everything is fine...
 					
 					// Blocks the channel and waits for the response from the server when client send "onComplete"
 					CountDownLatch latch = new CountDownLatch(1);
+					//use get method in the login GUI to get access to the stub
 					CloudServiceGrpc.CloudServiceStub CloudClient = loginGUI.getCloudClient();
 					StreamObserver<AddRequest> requestObserver = CloudClient.add(new StreamObserver<ResponseMessage>() {
-
+						//for each response from the server, append response to the Text Area "response"
 						@Override
 						public void onNext(ResponseMessage value) {
 							// TODO Auto-generated method stub
@@ -154,26 +160,30 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 							response.append(value.getResponse()); // print response on the text area
 
 						}
-
+						//if any error occur...
 						@Override
 						public void onError(Throwable t) {
 							t.printStackTrace();
+							JOptionPane.showMessageDialog(addButton, "Sorry, sothing went wrong!");
 
 						}
-
+						
 						@Override
 						public void onCompleted() {
-							// the server is done sending us data
+							// the server is done sending data
 							// onCompleted will be called right after onNext();
 							System.out.println("Server has completed sending messages");
 
-							// Client finished sending requests, so it count down waiting for the server's
+							// Client finished sending requests, it starts the count down waiting for the server's
 							// response
 							latch.countDown();
 						}
 
 					}); // end of "requestObserver"
 					
+					/* WHEN CLICKED ON THE "ADD" BUTTON IT WILL STORE THE INFORMATION FROM EACH TEXT FIELD
+					 * AND GENERATE A REQUEST. IF USER WANTS TO ADD MULTIPLE EMPLOYEES IT JUST NEED TO 
+					 * CLICK ON "YES" WHEN MESSAGE IS PROMPT AND FILL THE TEXT FIELDS AGAIN.*/
 					AddRequest request;
 					Scanner sc = new Scanner(System.in);
 					String birthDay = dateOfBirth.getText();
@@ -182,21 +192,27 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 					String Gender = gender.getSelectedItem().toString();
 					String hDate = hireDate.getText();
 
-					// Set values to the the request
+					// Build a request
 					request = AddRequest.newBuilder().setDateOfBirth(birthDay).setFirstName(firstName)
 							.setLastName(lastName).setGender(Gender).setHireDate(hDate).build();
-
+					
+					//depending on user's answer, next action will be taken...
 					int repeat = JOptionPane.showConfirmDialog(null,
-							"Press \"Confirm\" if your would like to add one more Employee!\n"
-									+ "Otherwise operation ends and employee(s) will be added automatically");
+							"Press \"Yes\" if your would like to add one more Employee or \"No\" to end operation\n"
+									+ "and employee(s) will be added automatically");
 					
 					
 					if (repeat == JOptionPane.YES_OPTION) {
+						//inform user that the specific Employee record is being processed and waiting for the response from the server
 						response.append("Employee: " + firstName + " is being processed...\n");
 						
-						// It will save each request in an ArrayList
+						// WHEN A BUTTON IS CLICKED, WHATEVER IS IN IT STARTS ALL OVER AGAIN. THE SOLUTION TO NOT LOST ALL REQUESTS
+						//FOR THE ADD METHOD WAS TO CREATE A GLOBAL ARRAYLIST OF "REQUESTS" AND STORE IT ALL THERE. THEN WHEN USER INFORM 
+						//THAT DOES NOT WANT TO ADD ANY MORE EMPLOYEE, IT COLLECTS ALL REQUESTS FROM THE REQUEST ARRAYLIST AND SEND IT TO 
+						//THE SERVER ONE BY ONE IN A LOOP
 						requests.add(request);
-						// set all text from add method to null every time a new employee is added
+						
+						// clear add text fields every time a new employee is added
 						clearAdd();
 						
 						JOptionPane.showMessageDialog(addButton,
@@ -205,8 +221,9 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 					} else {
 						
 						requests.add(request);
-						// At the end, when the Client answer he does not want to send any more request, it collects all requests
-						// added before and send it one by one.
+						
+						// At the end, when the Client answer he/she does not want to send any more request, it collects all requests
+						// stored in the ArrayList of requests, and send it one by one.
 						for (int i = 0; i< requests.size(); i++) {
 							requestObserver.onNext(requests.get(i));
 						}
@@ -214,15 +231,17 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 						//Once it is done sending requests, it tells the server that it has completed
 						requestObserver.onCompleted();
 						
-						// set all text from add method to null
+						// clear add text fields
 						clearAdd();
+						
+						//Clear list of requests, so then if user Request add method again it start all over and avoid duplications
 						requests.clear();
 						
 						//Show message to the user
 						JOptionPane.showMessageDialog(addButton, "Alright, the employee list was updated!");
 					}
 
-					// This is used to wait for the server's response. Otherwise the channel closes
+					// This is used for waiting the server's response. Otherwise the channel closes
 					// and there is no time to get response
 					try {
 						latch.await(3L, TimeUnit.SECONDS);
@@ -233,7 +252,7 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 				}
 				
 			}
-		});
+		}); //End of "ADD" button
 		
 		
 		
@@ -246,44 +265,53 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		addButton.setBounds(512, 40, 117, 42);
 		getContentPane().add(addButton);
 		
-		/*----------------------- Remove Employee Button, BiDirectional Streaming API --------------------*/
+		/*----------------------- "REMOVE" existing employee Button, BiDirectional Streaming API --------------------*/
 		
 		JButton removeButton = new JButton("REMOVE");
+		
+		//when clicked on the "REMOVE" button
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// If any of the Remove Employee fields is empty, show message Dialog!
-				if (empNumber_remove.getText().equals(null) || fName_remove.getText().equals(null)) {
+				if (empNumber_remove.getText().equals("") || fName_remove.getText().equals("")) {
 
 					JOptionPane.showMessageDialog(addButton,
 							"Please, specify Employee number and First name to remove the Employee record");
 
-				} else {
+				} else { 
 
 					// Blocks the channel and waits for the response from the server when client
 					// send "onComplete"
 					CountDownLatch latch = new CountDownLatch(1);
+					
+					//use get method in the login GUI to get access to the stub
 					CloudServiceGrpc.CloudServiceStub CloudClient = loginGUI.getCloudClient();
 
 					StreamObserver<RemoveRequest> requestObserver = CloudClient
 							.remove(new StreamObserver<ResponseMessage>() {
-
+								//for each response "onNext" from the server
 								@Override
 								public void onNext(ResponseMessage value) {
 									// TODO Auto-generated method stub
 									System.out.println(value.getResponse());
-									appendResponse(value.getResponse() + "\n");
+									
+									//append each response to the text area
+									response.append(value.getResponse() + "\n");
+									
+									//clears text from remove fields
 									clearRemove();
 								}
 
 								@Override
 								public void onError(Throwable t) {
 									t.printStackTrace();
+									JOptionPane.showMessageDialog(addButton, "Sorry, sothing went wrong!");
 
 								}
 
 								@Override
 								public void onCompleted() {
-									// the server is done sending us data
+									// the server is done sending data
 									// onCompleted will be called right after onNext();
 									System.out.println("Server has completed sending messages");
 
@@ -299,10 +327,10 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 					int empNumber = Integer.parseInt(empNumber_remove.getText());
 					String firstName = fName_remove.getText();
 
-					// Set values to the the request
+					// Build a remove request
 					request = RemoveRequest.newBuilder().setEmpNo(empNumber).setFirstName(firstName).build();
 
-					// Send each request one by one
+					// Send the request to the server
 					requestObserver.onNext(request);
 
 					// Tell the server that the client has completed sending requests
@@ -319,7 +347,8 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 				}
 
 			}
-		});
+		}); //End of REMOVE button
+		
 		removeButton.setBackground(new Color(0, 0, 0));
 		removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		removeButton.setFont(new Font("Lucida Grande", Font.BOLD, 16));
@@ -330,16 +359,22 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		
 		/*------------------------ Logout Button, Unary API ----------------------*/
 		JButton logoutButton = new JButton("LOGOUT");
+		
+		//When clicked on the "LOGOUT" button
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//use get method in the login GUI to get access to the stub
 				LoginServiceGrpc.LoginServiceBlockingStub LoginClient = loginGUI.getLoginClient();
 				
 				String username = JOptionPane.showInputDialog(logoutButton, "Please confirm username: " );
 				
+				//Build a Logout request
 				LogoutRequest request = LogoutRequest.newBuilder().setUsername(username).build();
 				
 				LogoutResponse response = LoginClient.logout(request);
 				JOptionPane.showMessageDialog(logoutButton, response.getResponseMessage());
+				
+				//If confirmation is correct, logout is executed and go back to Login GUI screen
 				if(response.getResponseCode() == 0) {
 					loginGUI.frame.setVisible(true);
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -348,7 +383,8 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 				
 				
 			}
-		});
+		});// End of "LOGOUT" button
+		
 		logoutButton.setBackground(new Color(0, 0, 0));
 		logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		logoutButton.setForeground(new Color(255, 215, 0));
@@ -359,29 +395,29 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		/*------------- PRINT DATABASE WHEN CLICKED ON "SHOW MY DATABASE", Server Streaming API -----------------*/
 		
 		JButton printButton = new JButton("SHOW MY DATABASE");
+		
+		//When clicked on the Button "SHOW MY DATABASE"
 		printButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				//use get method in the login GUI to get access to the stub
 				printServiceGrpc.printServiceBlockingStub PrintClient = loginGUI.getPrintClient();
 				
 				// Client request
 				printRequest print = printRequest.newBuilder().setPrint(true).build();
 				
-//				PrintClient.print(print).forEachRemaining(printResponse ->{
-//					System.out.println(printResponse.getPrinting()); //print response on the text area
-//				});
-				
-				new Thread()
-				{
+				//Create a different thread to print each message in the Text area individually, otherwise
+				//it would wait until the stream ends and finally append the response to the text area
+				new Thread() {
 				    public void run() {
 				    	try {
 							Iterator<printResponse> responces = PrintClient.print(print);
 
-							// This loop will print each of the responses while the server is still sending
-							// it
+							// While the server is still sending responses, keep printing it...
 							while (responces.hasNext()) {
+								//creates a variable of the "printResponse" to store each response
 								printResponse temp = responces.next();
 								System.out.println(temp.getPrinting()); 
-								//appendResponse(temp.getPrinting() + "\n"); //print response on the text area
 								response.append(temp.getPrinting() + "\n");
 								
 							} // end of while loop
@@ -391,11 +427,12 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 						}
 				    	
 				    }
-				}.start();
+				}.start(); //starts the thread
 				
 				
 			}
-		});
+		}); //End of "SHOW MY DATABASE" button
+		
 		printButton.setBackground(Color.WHITE);
 		printButton.setForeground(new Color(0, 0, 0));
 		printButton.setFont(new Font("Lucida Grande", Font.BOLD, 16));
@@ -478,7 +515,7 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		gender.setBackground(new Color(255, 255, 255));
 		gender.setForeground(new Color(0, 0, 0));
 		gender.setBounds(394, 60, 81, 27);
-		gender.setModel(new DefaultComboBoxModel(new String[] {"","M", "F"}));
+		gender.setModel(new DefaultComboBoxModel(new String[] {"","M", "F"})); //gives values to the "Gender" Combo box menu 
 		getContentPane().add(gender);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("Emp Number:");
@@ -495,10 +532,11 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 			public void keyTyped(KeyEvent evt) {
 				//Consume any character different from numbers
 				if (!Character.isDigit(evt.getKeyChar())){
-		            evt.consume();
+		            evt.consume(); 
 		        }
 			}
 		});
+		
 		empNumber_remove.setBackground(new Color(248, 248, 255));
 		empNumber_remove.setColumns(10);
 		empNumber_remove.setBounds(109, 126, 130, 26);
@@ -520,8 +558,10 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		/*-------------------- Clear Button --------------------*/
 		JButton clearButton = new JButton("CLEAR");
 		clearButton.setBackground(new Color(0, 0, 0));
+		
+		//when clicked on "CLEAR", it set all fields to null
 		clearButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { //when clicked on "CLEAR", it set all fields to null
+			public void actionPerformed(ActionEvent arg0) { 
 				clearAll();
 			}
 		});
@@ -531,36 +571,33 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		getContentPane().add(clearButton);
 	}
 	
-	public void appendResponse(String line) {
-		 response.append(line);	
-	}
 	
 	
 	//Clear fields in the add area
 	public void clearAdd() {
 		
-		fName_add.setText(null);
-		lName.setText(null);
-		dateOfBirth.setText(null);
-		hireDate.setText(null);
-		gender.setSelectedItem(null);
+		fName_add.setText("");
+		lName.setText("");
+		dateOfBirth.setText("");
+		hireDate.setText("");
+		gender.setSelectedItem("");
 	}
 	
 	//Clear fields in the remove area
 	public void clearRemove() {
-		empNumber_remove.setText(null);
-		fName_remove.setText(null);
+		empNumber_remove.setText("");
+		fName_remove.setText("");
 	}
 	
-	// set all text from add method to null every time a new employee is added
+	// Clear all text fields including the text area
 	public void clearAll() {
-		fName_add.setText(null);
-		lName.setText(null);
-		dateOfBirth.setText(null);
-		hireDate.setText(null);
-		gender.setSelectedItem(null);
-		empNumber_remove.setText(null);
-		fName_remove.setText(null);
+		fName_add.setText("");
+		lName.setText("");
+		dateOfBirth.setText("");
+		hireDate.setText("");
+		gender.setSelectedItem("");
+		empNumber_remove.setText("");
+		fName_remove.setText("");
 		response.setText(null);
 	}
 	
