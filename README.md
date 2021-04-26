@@ -15,8 +15,8 @@ To access the GUI a connection to the server is REQUIRED, for that:
  - Then go to: CMP [Cloud_Managment_PlatForm] > src/main/java > GUI > "Main_Cloud_Managment_Platform_GUI.java"
  - Run the "Main_Cloud_Managment_Platform_GUI.java"
  
- -"CLEAR" button clears the username and password fields
- -"LOGIN" button allows access to the next graphical interface.
+ - "CLEAR" button clears the username and password fields
+ - "LOGIN" button allows access to the next graphical interface.
  - Use the username and password below to continue:
 User Name: Patryck
 Password: test
