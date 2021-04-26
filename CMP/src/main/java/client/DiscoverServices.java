@@ -71,6 +71,10 @@ public class DiscoverServices {
     		String address = InetAddress.getLocalHost().toString().split("/")[1];
             JmDNS jmdns = JmDNS.create("local/" + address);
             
+            /*During my test it only worked when creating a new JMDNS and it can only
+             * discover one service per time. If added multiple services it returns no value.
+             * The solution was to create one discover method a part to discover each service.*/
+            
             // Add a service listener (test)
 //    	    String login_service_type = "_loginCMP._tcp.local.";
 //    	    ds.discoverService(login_service_type);
