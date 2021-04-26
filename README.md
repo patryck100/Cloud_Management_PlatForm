@@ -1,6 +1,6 @@
-# Cloud_Managment_PlatForm
+# Cloud_Management_PlatForm
  
-•	“Cloud_Managment_Platform” is a JAVA project developed on Eclipse IDE, which the main goal is to simulate a Management of a Cloud Environment. 
+•	“Cloud_Management_Platform” is a JAVA project developed on Eclipse IDE, which the main goal is to simulate a Management of a Cloud Environment. 
 •	This Distributed System project makes use of Protocol Buffers and GRpc to allow communication between Servers, Services and Clients. 
 •	The services are named, registered and discovered using Java implementation of multi-cast DNS (JMDNS)
 •	The services are:
@@ -10,9 +10,9 @@
 
 For a better visualization of the code, a Graphical user interface (GUI) was generated using Java Application Window, located in the package "GUI".
 To access the GUI a connection to the server is REQUIRED, for that:
- - Open the java project: CMP [Cloud_Managment_PlatForm] > src/main/java > server > "ServerCMP.java"
+ - Open the java project: CMP [Cloud_Management_PlatForm] > src/main/java > server > "ServerCMP.java"
  - Run the "ServerCMP.java"
- - Then go to: CMP [Cloud_Managment_PlatForm] > src/main/java > GUI > "Main_Cloud_Managment_Platform_GUI.java"
+ - Then go to: CMP [Cloud_Management_PlatForm] > src/main/java > GUI > "Main_Cloud_Managment_Platform_GUI.java"
  - Run the "Main_Cloud_Managment_Platform_GUI.java"
 
 Great, the GUI is running... With the GUI opened:
