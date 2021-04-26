@@ -19,10 +19,11 @@ public class DiscoverServices {
     public ServiceInfo discoverService(String service_type) {
         try {
             // Create a JmDNS instance
-			//When a macbook call the "InetAddress" it returns "MacBook-model." and then local host. It gave me an error before
+			//When a macbook call the "InetAddress" it returns "MacBook-model." + local host address. It gave me an error before
 			//and the solution was to use this method and collect only the address after the "/" and write "local/" before
     		String address = InetAddress.getLocalHost().toString().split("/")[1];
             JmDNS jmdns = JmDNS.create("local/" + address);
+            
             jmdns.addServiceListener(service_type, new ServiceListener() {
                 @Override
                 public void serviceResolved(ServiceEvent event) {
@@ -42,12 +43,12 @@ public class DiscoverServices {
                 }
                 @Override
                 public void serviceAdded(ServiceEvent event) {
-                    System.out.println("Service added: " + event.getInfo().getPort());
+                    System.out.println("Service added on port: " + event.getInfo().getPort());
                 }
             });
             // Wait a bit
             Thread.sleep(1000);
-            jmdns.close();
+            jmdns.close(); //close the JMDNS
         } catch (UnknownHostException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
@@ -57,6 +58,7 @@ public class DiscoverServices {
             e.printStackTrace();
         }
         
+        //return serviceInfo so then it can be accessed from outside this class
         return serviceInfo;
     }
 	

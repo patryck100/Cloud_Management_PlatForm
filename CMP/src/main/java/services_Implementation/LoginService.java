@@ -23,7 +23,7 @@ public class LoginService extends LoginServiceImplBase{
 		// add more user accounts or alter it in the file through the build method above.
 		try {
 			//writing in a txt file but it could be written in binary to make it more secure and faster for example
-			System.out.println("Writing user account which will be used to validate into txt file. Can be checked into the project"); 
+			System.out.println("Writing user account which will be used to validate into txt file. Can be checked into the project folder"); 
 			FileOutputStream outputStream = new FileOutputStream("userAccount.txt"); //has to surround it with catch to handle any errors
 			validate.writeTo(outputStream); //can only write outputStream
 			//has to surround it with catch to handle any errors
@@ -34,7 +34,7 @@ public class LoginService extends LoginServiceImplBase{
 			e.printStackTrace();
 		}
 		
-	}
+	}// End of "validateUser"
 	
 	
 	//Unary service API. Validates user name and password and later returns permission to access other files
@@ -60,7 +60,7 @@ public class LoginService extends LoginServiceImplBase{
 		
 		
 		//gives access to next GUI page when response code is set to 1 (login successful)
-		//should read user and password from a file from the server
+		//read user and password from a file in the server
 		if(UserName.equals(messageFromFile.getUserName()) && Password.equals(messageFromFile.getPassword())) { 
 			//if "UserName" is equals to "Patryck" and "password" equals to "test"
 			//return success response
@@ -81,7 +81,7 @@ public class LoginService extends LoginServiceImplBase{
 			e.printStackTrace();
 		}
 		
-	}
+	}// End of "login"
 
 	
 	//Unary service API. Validates user name and returns code to 0 if logout is successful, and 1 when attempt fails and client keeps logged in
@@ -119,7 +119,7 @@ public class LoginService extends LoginServiceImplBase{
 		}
 		
 		
-	}
+	}// end of "logout"
 	
 	public Properties getProperties() {
 
@@ -144,7 +144,7 @@ public class LoginService extends LoginServiceImplBase{
 		}
 
 		return prop;
-	}
+	}// end of "properties"
 
 	
 	

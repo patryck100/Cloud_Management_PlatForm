@@ -123,7 +123,7 @@ public class CloudService extends CloudServiceImplBase{
 		};
 		// While the Client is sending "onNext" requests, it keeps the recursion loop
 		return requestObserver;
-	}
+	} // End of "onComplete"
 	
 	
 	// Bi Directional API. Client request to remove a sequence of Employee records, the
@@ -253,7 +253,7 @@ public class CloudService extends CloudServiceImplBase{
 				
 			} //end of "onComplete"
 			
-		};
+		}; //end of "requestObserver"
 		
 		//while the request is "onNext", keeps the recursion
 		return requestObserver;

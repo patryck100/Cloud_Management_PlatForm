@@ -1,8 +1,8 @@
-syntax = "proto3";
+syntax = "proto3"; // version of the protocol buffer being used
 
-option java_multiple_files = true;
-option java_package = "print";
-option java_outer_classname = "printImpl";
+option java_multiple_files = true; // instead of generating code in an unique file, it generates multiple files
+option java_package = "print"; //name of the package where the gRPC code will be generated
+option java_outer_classname = "printImpl"; //name of the class which will be extended to implemente the grpc code
 
 package capacity;
 
@@ -17,9 +17,10 @@ message printResponse{
 }
 
 
-service printService{
+service printService{ //name of the service
 
-	//Server streaming API
+	//Server streaming API. Client requests a String representation of the database, server responds with
+	//multiple messages back + size of database
 	rpc print(printRequest) returns (stream printResponse){};
 	
 }
