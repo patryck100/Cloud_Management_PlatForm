@@ -8,11 +8,11 @@ package print;
  * Client will request a string representation from the cloud
  * </pre>
  *
- * Protobuf type {@code capacity.printRequest}
+ * Protobuf type {@code print.printRequest}
  */
 public  final class printRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:capacity.printRequest)
+    // @@protoc_insertion_point(message_implements:print.printRequest)
     printRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use printRequest.newBuilder() to construct.
@@ -73,13 +73,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return print.printImpl.internal_static_capacity_printRequest_descriptor;
+    return print.printImpl.internal_static_print_printRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return print.printImpl.internal_static_capacity_printRequest_fieldAccessorTable
+    return print.printImpl.internal_static_print_printRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             print.printRequest.class, print.printRequest.Builder.class);
   }
@@ -255,21 +255,21 @@ private static final long serialVersionUID = 0L;
    * Client will request a string representation from the cloud
    * </pre>
    *
-   * Protobuf type {@code capacity.printRequest}
+   * Protobuf type {@code print.printRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:capacity.printRequest)
+      // @@protoc_insertion_point(builder_implements:print.printRequest)
       print.printRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return print.printImpl.internal_static_capacity_printRequest_descriptor;
+      return print.printImpl.internal_static_print_printRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return print.printImpl.internal_static_capacity_printRequest_fieldAccessorTable
+      return print.printImpl.internal_static_print_printRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               print.printRequest.class, print.printRequest.Builder.class);
     }
@@ -300,7 +300,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return print.printImpl.internal_static_capacity_printRequest_descriptor;
+      return print.printImpl.internal_static_print_printRequest_descriptor;
     }
 
     @java.lang.Override
@@ -439,10 +439,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:capacity.printRequest)
+    // @@protoc_insertion_point(builder_scope:print.printRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:capacity.printRequest)
+  // @@protoc_insertion_point(class_scope:print.printRequest)
   private static final print.printRequest DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new print.printRequest();

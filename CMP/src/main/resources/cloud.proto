@@ -8,7 +8,7 @@ package CloudManagment;
 
 service CloudService{ //name of the service
 	
-	//Client Streaming API (Client willl be able to send many add request and receive a final result)
+	//Client Streaming API (Client will be able to send many add request and receive a final result)
 	rpc add(stream AddRequest) returns (ResponseMessage){};
 	
 	//Bidirectional Streaming API (Client gets respective response for each request, and final result)

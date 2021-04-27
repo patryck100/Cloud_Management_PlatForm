@@ -126,7 +126,7 @@ public final class CloudServiceGrpc {
 
     /**
      * <pre>
-     *Client Streaming API (Client willl be able to send many add request and receive a final result)
+     *Client Streaming API (Client will be able to send many add request and receive a final result)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<CloudManagment.AddRequest> add(
@@ -187,7 +187,7 @@ public final class CloudServiceGrpc {
 
     /**
      * <pre>
-     *Client Streaming API (Client willl be able to send many add request and receive a final result)
+     *Client Streaming API (Client will be able to send many add request and receive a final result)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<CloudManagment.AddRequest> add(

@@ -27,7 +27,7 @@ public final class printServiceGrpc {
 
   private printServiceGrpc() {}
 
-  public static final String SERVICE_NAME = "capacity.printService";
+  public static final String SERVICE_NAME = "print.printService";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<print.printRequest,
@@ -48,7 +48,7 @@ public final class printServiceGrpc {
               io.grpc.MethodDescriptor.<print.printRequest, print.printResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(
-                  "capacity.printService", "print"))
+                  "print.printService", "print"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   print.printRequest.getDefaultInstance()))

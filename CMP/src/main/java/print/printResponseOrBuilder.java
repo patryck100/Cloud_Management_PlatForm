@@ -4,7 +4,7 @@
 package print;
 
 public interface printResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:capacity.printResponse)
+    // @@protoc_insertion_point(interface_extends:print.printResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**

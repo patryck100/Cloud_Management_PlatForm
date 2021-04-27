@@ -4,7 +4,7 @@ option java_multiple_files = true; // instead of generating code in an unique fi
 option java_package = "print"; //name of the package where the gRPC code will be generated
 option java_outer_classname = "printImpl"; //name of the class which will be extended to implemente the grpc code
 
-package capacity;
+package print;
 
 // Client will request a string representation from the cloud
 message printRequest{

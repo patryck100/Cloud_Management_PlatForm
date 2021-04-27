@@ -15,15 +15,15 @@ public final class printImpl {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_capacity_printRequest_descriptor;
+    internal_static_print_printRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_capacity_printRequest_fieldAccessorTable;
+      internal_static_print_printRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_capacity_printResponse_descriptor;
+    internal_static_print_printResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_capacity_printResponse_fieldAccessorTable;
+      internal_static_print_printResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -33,11 +33,11 @@ public final class printImpl {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013print.proto\022\010capacity\"\035\n\014printRequest\022" +
-      "\r\n\005print\030\001 \001(\010\"!\n\rprintResponse\022\020\n\010print" +
-      "ing\030\001 \001(\t2L\n\014printService\022<\n\005print\022\026.cap" +
-      "acity.printRequest\032\027.capacity.printRespo" +
-      "nse\"\0000\001B\024\n\005printB\tprintImplP\001b\006proto3"
+      "\n\013print.proto\022\005print\"\035\n\014printRequest\022\r\n\005" +
+      "print\030\001 \001(\010\"!\n\rprintResponse\022\020\n\010printing" +
+      "\030\001 \001(\t2F\n\014printService\0226\n\005print\022\023.print." +
+      "printRequest\032\024.print.printResponse\"\0000\001B\024" +
+      "\n\005printB\tprintImplP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -51,17 +51,17 @@ public final class printImpl {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_capacity_printRequest_descriptor =
+    internal_static_print_printRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_capacity_printRequest_fieldAccessorTable = new
+    internal_static_print_printRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_capacity_printRequest_descriptor,
+        internal_static_print_printRequest_descriptor,
         new java.lang.String[] { "Print", });
-    internal_static_capacity_printResponse_descriptor =
+    internal_static_print_printResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_capacity_printResponse_fieldAccessorTable = new
+    internal_static_print_printResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_capacity_printResponse_descriptor,
+        internal_static_print_printResponse_descriptor,
         new java.lang.String[] { "Printing", });
   }
 
