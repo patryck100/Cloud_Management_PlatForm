@@ -12,8 +12,8 @@ For a better visualization of the code, a Graphical user interface (GUI) was gen
 To access the GUI a connection to the server is REQUIRED, for that:
  - Open the java project: CMP [Cloud_Management_PlatForm] > src/main/java > server > "ServerCMP.java"
  - Run the "ServerCMP.java"
- - Then go to: CMP [Cloud_Management_PlatForm] > src/main/java > GUI > "Main_Cloud_Managment_Platform_GUI.java"
- - Run the "Main_Cloud_Managment_Platform_GUI.java"
+ - Then go to: CMP [Cloud_Management_PlatForm] > src/main/java > GUI > "Main_Cloud_Management_Platform_GUI.java"
+ - Run the "Main_Cloud_Management_Platform_GUI.java"
 
 Great, the GUI is running... With the GUI opened:
 
