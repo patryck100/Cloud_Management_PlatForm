@@ -29,7 +29,7 @@ import java.awt.Cursor;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
-public class Main_Cloud_Managment_Platform_GUI {
+public class Main_Cloud_Management_Platform_GUI {
 
 	/*-------- Global variable to be accessed from the class --------*/
 	JFrame frame;
@@ -66,7 +66,7 @@ public class Main_Cloud_Managment_Platform_GUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main_Cloud_Managment_Platform_GUI window = new Main_Cloud_Managment_Platform_GUI();
+					Main_Cloud_Management_Platform_GUI window = new Main_Cloud_Management_Platform_GUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -78,7 +78,7 @@ public class Main_Cloud_Managment_Platform_GUI {
 	/**
 	 * Create the application.
 	 */
-	public Main_Cloud_Managment_Platform_GUI() {
+	public Main_Cloud_Management_Platform_GUI() {
 		
 			
 		
@@ -222,7 +222,7 @@ public class Main_Cloud_Managment_Platform_GUI {
 					//if response is positive, go to next GUI and dispose this one (will be still running but invisible)
 					//so then the channel does not loose connection
 					if (response.getResponseCode() == 1) {
-						Cloud_Managment_Platform_GUI nextGUI = new Cloud_Managment_Platform_GUI();
+						Cloud_Management_Platform_GUI nextGUI = new Cloud_Management_Platform_GUI();
 						nextGUI.setVisible(true);
 						nextGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 						frame.dispose();

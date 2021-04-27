@@ -54,7 +54,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
 
-public class Cloud_Managment_Platform_GUI extends JFrame {
+public class Cloud_Management_Platform_GUI extends JFrame {
 
 	/*-------- Global variable to be accessed from the class --------*/
 	private JTextField fName_add = null;
@@ -69,7 +69,7 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 	
 	//Object of classes
 	private ClientCMP client = new ClientCMP();
-	private Main_Cloud_Managment_Platform_GUI loginGUI = new Main_Cloud_Managment_Platform_GUI();
+	private Main_Cloud_Management_Platform_GUI loginGUI = new Main_Cloud_Management_Platform_GUI();
 	
 	//Having an array of Employee requests allows requesting multiple requests in a Client streaming API.
 	private List <AddRequest> requests = new ArrayList<>(); 
@@ -82,7 +82,7 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Cloud_Managment_Platform_GUI frame = new Cloud_Managment_Platform_GUI();
+					Cloud_Management_Platform_GUI frame = new Cloud_Management_Platform_GUI();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -94,7 +94,7 @@ public class Cloud_Managment_Platform_GUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Cloud_Managment_Platform_GUI() {
+	public Cloud_Management_Platform_GUI() {
 		
 		getContentPane().setBackground(new Color(25, 25, 112));
 		setBounds(100, 100, 635, 430);
