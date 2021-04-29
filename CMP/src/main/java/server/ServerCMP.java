@@ -80,7 +80,7 @@ public class ServerCMP implements Runnable{
 		//Instance of the register services class, so then the services are registered automatically before the server starts
 		//registerServices register = new registerServices();
 		
-//		//register all services
+
 //		System.out.println("Registering services, please wait until server get started...\n");
 		
 		//It takes arond 25.75seconds to register the 3 services and run the server. Using thread is more efficient
@@ -131,7 +131,7 @@ public class ServerCMP implements Runnable{
 			
 
 			
-			//server keeps in stand by, awaiting for requests
+			//server keeps in standby, awaiting for requests
 		    server1.awaitTermination(); 
 		    server2.awaitTermination();
 		    server3.awaitTermination();

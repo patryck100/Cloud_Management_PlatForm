@@ -31,14 +31,12 @@ public class CloudService extends CloudServiceImplBase{
 		// the last request send a "onComplete"
 		StreamObserver<AddRequest> requestObserver = new StreamObserver<AddRequest>() {
 
-			// As it is a Client streaming, after each request is validated, the response
-			// is accumulated in a String variable called "response"
+			// As it is a Client streaming, after each validated request, the responses
+			// are accumulated into the String "response"
 			String response = "";
 
-			// When the size() function is called, it creates a new database if it does not
-			// exist,
-			// make a list of all employee numbers already used and returns the size of the
-			// database
+			// When the size() function is called, it creates a new database if it does not exist,
+			// make a list of all employee numbers already used and returns the size of the database
 			int size = size();
 
 			@Override
@@ -121,8 +119,10 @@ public class CloudService extends CloudServiceImplBase{
 			}
 
 		};
-		// While the Client is sending "onNext" requests, it keeps the recursion loop
+		
+		// Return "onNext", "onError" or "onComplete" from the rquestObserver
 		return requestObserver;
+		
 	} // End of "onComplete"
 	
 	
@@ -255,7 +255,7 @@ public class CloudService extends CloudServiceImplBase{
 			
 		}; //end of "requestObserver"
 		
-		//while the request is "onNext", keeps the recursion
+		// Return "onNext", "onError" or "onComplete" from the rquestObserver
 		return requestObserver;
 		
 	}// End of remove function
