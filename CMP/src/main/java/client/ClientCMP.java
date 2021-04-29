@@ -249,14 +249,6 @@ public class ClientCMP {
 			
 		}
 		
-		String login_service_type = "_loginCMP._tcp.local.";
-	    serviceInfo_LoginChannel = discover(login_service_type);
-	    
-	    String print_service_type = "_print._tcp.local.";
-	    serviceInfo_PrintChannel = discover(print_service_type);
-	    
-	    String cloud_service_type = "_cloud._tcp.local.";
-	    serviceInfo_CloudChannel = discover(cloud_service_type);
 		
 //	    String host_Login = ""+serviceInfo_LoginChannel.getHostAddresses()[0];
 		int port_Login = serviceInfo_LoginChannel.getPort();
