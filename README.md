@@ -30,3 +30,7 @@ the (yyyy-mm-dd) regex. Employee also must be 18+ to be hired, otherwise it gets
  - "REMOVE" button requires the Employee number and First name to allow you to remove a certain existent Employee. 
  - "LOGOUT" button requires a confirmation of your username (Patryck), disconnects and bring you back to the login page
  - "CLEAR" button clears all the fields, including the text area where the messages are displayed.
+
+
+Link for the project presentation video:
+https://youtu.be/BhDe1_FVn6M
